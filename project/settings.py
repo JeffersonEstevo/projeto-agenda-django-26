@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'contact', # Adicionado após criação do app contact com $ python .\manage.py startapp contact
 ]
 
 MIDDLEWARE = [
