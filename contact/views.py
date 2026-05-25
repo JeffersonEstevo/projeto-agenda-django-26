@@ -5,6 +5,6 @@ from django.shortcuts import render
 def index(request):
     # Retorna o arquivo HTML renderizado localizado na pasta de templates
     return render(
-        request,             # O objeto da requisição HTTP obrigatório
+        request,              # O objeto da requisição HTTP obrigatório
         'contact/index.html', # Caminho do arquivo HTML que será exibido
     )
