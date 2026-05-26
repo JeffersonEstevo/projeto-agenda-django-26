@@ -10,7 +10,7 @@ class ContactAdmin(admin.ModelAdmin):
     # Define as colunas que aparecem na tabela de listagem no painel administrativo
     list_display = 'id', 'first_name', 'last_name', 'phone',
     # Define a ordenação padrão dos itens (o sinal de menos indica ordem decrescente)
-    ordering = '-id'
+    ordering = '-id',
     # Cria uma barra lateral para filtrar os registros por data
     # list_filter = 'created_date',
     # Adiciona uma barra de pesquisa para buscar por termos nesses campos específicos
