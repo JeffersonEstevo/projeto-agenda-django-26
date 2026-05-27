@@ -123,3 +123,36 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     BASE_DIR / 'base_static',
 )
+
+# Define o diretório absoluto no sistema de arquivos onde o Django irá reunir todos os 
+# arquivos estáticos (CSS, JavaScript, imagens do layout) do projeto e de seus apps.
+# POR QUE USAR: É obrigatório para o ambiente de produção. Ao executar o comando 
+# 'python manage.py collectstatic', o Django copia os arquivos de todas as aplicações 
+# para esta pasta única, facilitando para um servidor web (como Nginx ou Apache) 
+# servir esses arquivos de forma rápida e segura, sem sobrecarregar o Django.
+# Adicionado para a pasta static ser criada para collectstatic
+STATIC_ROOT = BASE_DIR / 'static' # collectstatic
+
+# Define o prefixo da URL que o navegador usará para acessar os arquivos de mídia.
+# POR QUE USAR: Diferente dos arquivos estáticos do sistema (CSS/JS), a mídia engloba 
+# os arquivos enviados ativamente pelos usuários (como fotos de perfil ou documentos). 
+# Essa constante diz ao Django qual caminho textual colocar na URL (ex: ://site.com) 
+# para diferenciar esses uploads públicos de outras rotas da aplicação.
+# Adicionado para arquivos de images
+MEDIA_URL = 'media/' # Arquivos enviados pelo usuário
+
+# Define o caminho absoluto no disco rígido do servidor onde o Django vai salvar fisicamente 
+# todos os arquivos e imagens que forem enviados (uploaded) pelos usuários do sistema.
+# POR QUE USAR: Enquanto o 'MEDIA_URL' cuida apenas do endereço de internet que o navegador 
+# digita, o 'MEDIA_ROOT' localiza a pasta real dentro do seu computador ou servidor (ex: C:/projeto/media/). 
+# Sem essa configuração, o Django não sabe em qual pasta do sistema operacional ele deve gravar os 
+# arquivos quando um formulário de upload ou campo 'ImageField' for processado.
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Define o tipo de campo padrão que o Django usará para gerar as chaves primárias (IDs) 
+# automáticas de novos models que não declaram um ID próprio.
+# POR QUE USAR: O 'BigAutoField' utiliza um inteiro de 64 bits (de 1 a 9 quintilhões). 
+# Ele substituiu o antigo 'AutoField' (32 bits, limite de 2 bilhões) para evitar 
+# que o banco de dados trave por falta de números disponíveis caso o seu sistema 
+# cresça muito e gere um volume massivo de registros ao longo do tempo.
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

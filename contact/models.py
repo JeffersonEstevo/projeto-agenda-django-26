@@ -6,8 +6,10 @@ from django.utils import timezone
 # id (primary key - automático no Django)
 # first_name (string) last_name (string), phone (string)
 # email (email), created_date (date), description (text)
-# category (foreign key), show (boolean), owner (foreign key)
-# picture (imagem)
+# category (foreign key), show (boolean), owner (foreign key), picture (imagem)
+
+# Depois 
+# owner (foreign key)
 
 # Cada classe que herda de models.Model vira uma tabela no seu banco de dados
 class Contact(models.Model):
@@ -33,6 +35,19 @@ class Contact(models.Model):
     # Campo de texto longo (sem limite estrito de caracteres) para a descrição do contato.
     # blank=True permite salvar o contato sem nenhuma descrição.
     description = models.TextField(blank=True)
+
+    # Campo booleano para controlar a exibição do contato. 
+    # default=True faz com que novos contatos fiquem visíveis por padrão.
+    show = models.BooleanField(default=True)
+
+    # Campo especializado para upload de imagens (fotos, capturas de tela, etc.).
+    # blank=True torna o preenchimento opcional, permitindo salvar o contato sem foto.
+    # upload_to define o caminho de organização baseado na data atual do upload.
+    # POR QUE USAR: O Django usará a pasta raiz de mídias (MEDIA_ROOT) combinada com 
+    # este parâmetro. Isso significa que as imagens físicas serão salvas automaticamente 
+    # na pasta 'media/pictures/ANO/MES/' (ex: media/pictures/2026/05/foto.jpg), evitando 
+    # que milhares de arquivos fiquem jogados em uma única pasta e causem lentidão no servidor.
+    picture = models.ImageField(blank=True, upload_to='pictures/%Y/%m/')
 
     # Método mágico do Python que define a representação em texto do objeto
     def __str__(self):
