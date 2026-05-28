@@ -23,3 +23,12 @@ class ContactAdmin(admin.ModelAdmin):
     list_editable = 'first_name', 'last_name',
     # Transforma estes campos em links clicáveis para abrir o formulário de edição completa
     list_display_links = 'id', 'phone'
+
+# O decorator avisa ao Django que a classe abaixo 
+# controlará o modelo 'Category' no painel administrativo do Django
+@admin.register(models.Category)
+class CategoryAdmin(admin.ModelAdmin):
+    # Define as colunas que aparecem na tabela de listagem no painel administrativo
+    list_display = 'name',
+    # Define a ordenação padrão dos itens (o sinal de menos indica ordem decrescente)
+    ordering = '-id',

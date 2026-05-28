@@ -11,6 +11,19 @@ from django.utils import timezone
 # Depois 
 # owner (foreign key)
 
+# Classe que representa a tabela de Categorias (ex: Amigos, Família, Trabalho).
+# Ela existe para que os contatos possam ser organizados em grupos dinâmicos.
+class Category(models.Model):
+    # Campo de texto curto para o nome da categoria. Limite de 50 caracteres.
+    # Cada linha criada nesta tabela representará uma categoria única no sistema.
+    name = models.CharField(max_length=50)
+
+    # Método que define como a categoria será exibida como texto no Admin do Django.
+    # Sem isso, o Django exibiria "Category object (1)" em vez do nome real (ex: "Amigos").
+    def __str__(self) -> str:
+        return self.name
+
+
 # Cada classe que herda de models.Model vira uma tabela no seu banco de dados
 class Contact(models.Model):
     # ATENÇÃO: O Django cria o campo 'id' automaticamente como chave primária,
@@ -48,6 +61,30 @@ class Contact(models.Model):
     # na pasta 'media/pictures/ANO/MES/' (ex: media/pictures/2026/05/foto.jpg), evitando 
     # que milhares de arquivos fiquem jogados em uma única pasta e causem lentidão no servidor.
     picture = models.ImageField(blank=True, upload_to='pictures/%Y/%m/')
+
+    # RELACIONAMENTO (Chave Estrangeira / Foreign Key):
+    # Vincula este contato a uma categoria específica da tabela Category.
+    #
+    # COMO FUNCIONA A RELAÇÃO (Muitos-para-Um / Many-to-One):
+    # - Muitos contatos podem pertencer a uma mesma categoria (ex: 10 contatos na categoria "Trabalho").
+    # - Cada contato individual só pode ter uma única categoria vinculada a ele por vez.
+    #
+    # EXPLICAÇÃO DOS PARÂMETROS:
+    # - Category: Indica o modelo com o qual este contato está se relacionando.
+    # - on_delete=models.SET_NULL: Se a categoria vinculada for apagada do banco de dados,
+    #   o Django NÃO apagará o contato. Em vez disso, ele apenas limpará o campo deixando-o vazio.
+    # - on_delete=models.CASCADE: Comportamento de exclusão em cascata. Se uma categoria for 
+    #   apagada do banco de dados (ex: deletar a categoria "Trabalho"), o Django vai APAGAR 
+    #   automaticamente todos os contatos que estavam vinculados a ela.
+    # - blank=True: Torna o preenchimento opcional em formulários e no painel administrativo.
+    # - null=True: Permite que a coluna aceite valores nulos (NULL) no banco de dados. 
+    #   Isso é obrigatório para que o 'SET_NULL' funcione, permitindo contatos sem nenhuma categoria.
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        blank=True, null=True
+    )
+
 
     # Método mágico do Python que define a representação em texto do objeto
     def __str__(self):
