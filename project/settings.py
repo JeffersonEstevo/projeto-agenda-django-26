@@ -19,14 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#*fck2g-op(=0%fkyu7*r=7kd7qj)t79!c1t1=j&h0usinmt+8'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -156,3 +148,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # que o banco de dados trave por falta de números disponíveis caso o seu sistema 
 # cresça muito e gere um volume massivo de registros ao longo do tempo.
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+try:
+    # Tenta importar todas as variáveis de um arquivo chamado 'local_settings.py'
+    # Se o arquivo existir, as configurações dele substituem as deste arquivo (settings.py)
+    from project.local_settings import *
+except ImportError:
+    ...
+    # Se o arquivo 'local_settings.py' não for encontrado, o Django ignora o erro
+    # O código continua rodando normalmente com as configurações padrão
