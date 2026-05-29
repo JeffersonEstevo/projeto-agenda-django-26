@@ -3,6 +3,9 @@ from django.db import models
 # Importa o timezone para gerenciar datas considerando o fuso horário configurado
 from django.utils import timezone
 
+# Importa o modelo padrão de Usuário do Django. Para usar owner
+from django.contrib.auth.models import User
+
 # id (primary key - automático no Django)
 # first_name (string) last_name (string), phone (string)
 # email (email), created_date (date), description (text)
@@ -105,6 +108,21 @@ class Contact(models.Model):
         Category,
         on_delete=models.SET_NULL,
         blank=True, null=True
+    )
+
+    owner = models.ForeignKey(
+        # Vincula o contato ao modelo de Usuário padrão do Django
+        User,
+        
+        # Se o Usuário dono for deletado, o Django NÃO apaga o contato.
+        # Em vez disso, ele limpa o campo mudando o valor para NULL no banco de dados.
+        on_delete=models.SET_NULL,
+        
+        # Permite que o campo fique vazio em formulários do Django (como no Admin)
+        blank=True, 
+        
+        # Permite que o campo grave o valor NULL (vazio) diretamente no banco de dados
+        null=True
     )
 
 
