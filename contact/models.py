@@ -14,6 +14,28 @@ from django.utils import timezone
 # Classe que representa a tabela de Categorias (ex: Amigos, Família, Trabalho).
 # Ela existe para que os contatos possam ser organizados em grupos dinâmicos.
 class Category(models.Model):
+    # A class Meta define os metadados (configurações de comportamento do modelo)
+    # --- ORDENAÇÃO DE DADOS ---
+    # Ordena as consultas do mais novo para o mais antigo (o '-' indica ordem decrescente)
+    #ordering = ['-created_at']
+
+    # --- BANCO DE DADOS ---
+    # Altera o nome físico da tabela gerada no banco de dados SQL
+    #db_table = 'tb_sistema_categorias'
+
+    # --- REGRAS E VALIDAÇÕES ---
+    # Bloqueia o banco: impede duas categorias com o mesmo 'slug' para o mesmo 'user'
+    #unique_together = [['slug', 'user']]
+
+    # --- REAPROVEITAMENTO (Descomente se for usar como modelo base) ---
+    # abstract = True # Se for True, não cria tabela própria, serve apenas para herança
+    class Meta:
+        # --- EXIBIÇÃO NO DJANGO ADMIN ---
+        # Define o nome amigável no singular para a interface do painel administrativo
+        verbose_name = 'Category'
+        # Define o nome amigável no plural (evita que o Django escreva 'Categorys')
+        verbose_name_plural = 'Categories'
+
     # Campo de texto curto para o nome da categoria. Limite de 50 caracteres.
     # Cada linha criada nesta tabela representará uma categoria única no sistema.
     name = models.CharField(max_length=50)
