@@ -1,0 +1,36 @@
+{% extends 'global/base.html' %}
+{% comment %}
+  Herda toda a estrutura HTML padrão do arquivo 'base.html' localizado na pasta 'global'.
+  Isso evita a repetição de códigos como <head>, <body>, menus e rodapés.
+{% endcomment %}
+
+{% comment %}
+  Preenche o bloco chamado 'content' que foi reservado no arquivo base,
+  inserindo especificamente os dados deste contato naquela posição.
+{% endcomment %}
+{% block content %}
+  <div class="single-contact">
+    
+    {% comment %} Exibe o nome completo do contato (Primeiro Nome + Sobrenome) em destaque {% endcomment %}
+    <h1 class="single-contact-name">
+      {{ contact.first_name }} {{ contact.last_name }}
+    </h1>
+
+    {% comment. Na listagem abaixo, o Django acessa e renderiza cada atributo do objeto 'contact' enviado pela View. % %}
+    <p><b>ID:</b> {{ contact.id }}</p>
+    <p><b>E-mail:</b> {{ contact.email }}</p>
+    <p><b>Phone:</b> {{ contact.phone }}</p>
+    
+    {% comment %} Exibe a data de criação do registro no banco de dados {% endcomment %}
+    <p><b>Created Date:</b> {{ contact.created_date }}</p>
+    
+    {% comment %} Exibe o texto descritivo ou observações sobre o contato {% endcomment %}
+    <p><b>Description:</b> {{ contact.description }}</p>
+    
+    {% comment %} 
+      Acessa a chave estrangeira (Relacionamento) e busca o nome da categoria associada.
+      Exemplo: Se a categoria for um modelo separado, ele traz o campo '.name' dela.
+    {% endcomment %}
+    <p><b>Category:</b> {{ contact.category.name }}</p>
+  </div>
+{% endblock content %}

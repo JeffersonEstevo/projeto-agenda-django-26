@@ -11,4 +11,11 @@ urlpatterns = [
     # Mapeia a raiz do app ('') para a função 'index' dentro de views.py
     # O 'name=index' serve para criar links dinâmicos no HTML usando {% url 'contact:index' %}
     path('', views.index, name='index'),
+
+    # DEFINIÇÃO DA ROTA DINÂMICA:
+    # 1. '<int:contact_id>/' -> Captura o valor digitado na URL (ex: /5/) e garante que ele seja um número inteiro (int).
+    #                           O Django salva esse número em uma variável chamada 'contact_id'.
+    # 2. views.contact       -> Define qual função do arquivo 'views.py' vai processar essa requisição.
+    # 3. name='contact'      -> Dá um apelido para a rota. Permite chamar esta URL no template sem escrever o caminho fixo.
+    path('<int:contact_id>/', views.contact, name='contact'),
 ]
