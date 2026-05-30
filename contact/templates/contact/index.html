@@ -1,1 +1,29 @@
-{% extends "global/base.html" %}
+{% extends 'global/base.html' %}
+{% comment %} 
+  Indica que este arquivo herda a estrutura visual de um template base.
+  Ele reutiliza o "esqueleto" HTML definido no arquivo 'global/base.html'.
+{% endcomment %}
+
+{% comment %} 
+  Preenche o ponto de encaixe chamado 'content' que foi deixado no template base.
+  Todo o código dentro deste bloco será inserido no arquivo pai.
+{% endcomment %}
+{% block content %}
+
+  {% comment %} 
+    Inicia um laço de repetição (loop) para percorrer a lista de contatos.
+    O Django passa por cada item de 'contacts' e salva temporariamente em 'contact'.
+  {% endcomment %}
+  {% for contact in contacts %}
+  
+    {% comment %} 
+      As chaves duplas '{{ }}' exibem uma variável na tela.
+      Aqui renderizamos o primeiro nome do contato como texto puro.
+    {% endcomment %}
+    {{ contact.first_name }} <br>
+    
+  {% comment %} Encerra o laço de repetição. {% endcomment %}
+  {% endfor %}
+
+{% comment %} Sinaliza o fim do bloco 'content'. {% endcomment %}
+{% endblock content %}

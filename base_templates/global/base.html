@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="{% static 'global/css/style.css' %}">
 </head>
 <body>
-    <h1>QUALQUER</h1>
+    {% comment %}
+      O 'block content' define uma área que pode ser substituída (sobrescrita).
+      Este arquivo funciona como um "esqueleto" (ex: base.html).
+      Qualquer template filho que use '{% extends "base.html" %}' poderá 
+      colocar o seu próprio código HTML exatamente dentro deste espaço.
+    {% endcomment %}
+    <main class="content">
+        {% block content %}
+        <!-- Se você colocar algum HTML aqui, ele será o conteúdo padrão caso o filho não o altere. -->
+        {% endblock content %}
+    </main>
 </body>
 </html>
