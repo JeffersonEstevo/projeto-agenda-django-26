@@ -9,10 +9,21 @@ from contact.models import Contact
 
 # Função que processa a requisição da página inicial
 def index(request):
-    # Faz uma consulta (Query) no banco de dados. 
-    # O método '.all()' busca TODOS os registros cadastrados na tabela de Contatos
-    # e armazena o resultado (um QuerySet) na variável 'contacts'.
-    contacts = Contact.objects.all()
+    # .filter(show=True) -> Filtra os resultados. Só traz os contatos onde 
+    # o campo 'show' é Verdadeiro (True).
+    # .order_by('-id')   -> Ordena os dados. O sinal de menos '-' 
+    # indica ordem decrescente (do ID maior para o menor / mais recentes primeiro).
+    # [10:20]            -> Faz o fatiamento (Slicing). Cria uma paginação que 
+    # pula os 10 primeiros registros e pega do 11º ao 20º.
+    contacts = Contact.objects \
+    .filter(show=True) \
+    .order_by('-id')[10:20]
+    
+
+    # Exibe no terminal do servidor o comando SQL puro que o ORM do Django gerou para o banco de dados.
+    # Útil para debugar e entender a performance da consulta.
+    # print(contacts.query)
+
     # Um dicionário Python que serve como "ponte" de dados.
     # A chave em string 'contacts' será o nome da variável que o seu 
     # arquivo HTML (index.html) vai ler para exibir as informações.
@@ -26,3 +37,4 @@ def index(request):
         'contact/index.html', # Caminho do arquivo HTML que será exibido
         context
     )
+
