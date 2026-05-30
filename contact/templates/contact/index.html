@@ -30,7 +30,19 @@
             
             {# Exibe o ID do contato como um link clicável #}
             <td class="table-cel">
-              <a class="table-link" href="#">
+              {% comment %}
+                ALTERAÇÃO DO LINK: Antes o href estava vazio ("#"). 
+                Agora, usamos a tag dinâmica {% url %} do Django para gerar o link correto de forma automática.
+                
+                COMO FUNCIONA:
+                1. 'contact:contact' -> O primeiro 'contact' é o 'app_name' (Namespace) definido no seu urls.py principal.
+                                        O segundo 'contact' é o 'name="contact"' que demos para a rota específica.
+                2. contact.id        -> Passa o ID do contato atual do loop como o argumento esperado pela rota (<int:contact_id>).
+                
+                RESULTADO NA TELA:
+                Se o contact.id for 5, o Django renderizará no navegador do usuário final: href="/contact/5/"
+              {% endcomment %}
+              <a class="table-link" href="{% url 'contact:contact' contact.id %}">
                 {{ contact.id }}
               </a>
             </td>
