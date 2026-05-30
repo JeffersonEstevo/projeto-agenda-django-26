@@ -24,5 +24,5 @@ def index(request):
     return render(
         request,              # O objeto da requisição HTTP obrigatório
         'contact/index.html', # Caminho do arquivo HTML que será exibido
-        context,
+        context
     )

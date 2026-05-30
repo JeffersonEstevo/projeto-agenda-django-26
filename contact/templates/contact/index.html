@@ -4,26 +4,62 @@
   Ele reutiliza o "esqueleto" HTML definido no arquivo 'global/base.html'.
 {% endcomment %}
 
-{% comment %} 
-  Preenche o ponto de encaixe chamado 'content' que foi deixado no template base.
-  Todo o código dentro deste bloco será inserido no arquivo pai.
-{% endcomment %}
+{# Define o bloco de conteúdo que será inserido no arquivo base do projeto #}
 {% block content %}
+  <div class="responsive-table">
+    <table class="contacts-table">
+      <caption class="table-caption ">
+        Contacts
+      </caption>
 
-  {% comment %} 
-    Inicia um laço de repetição (loop) para percorrer a lista de contatos.
-    O Django passa por cada item de 'contacts' e salva temporariamente em 'contact'.
-  {% endcomment %}
-  {% for contact in contacts %}
-  
-    {% comment %} 
-      As chaves duplas '{{ }}' exibem uma variável na tela.
-      Aqui renderizamos o primeiro nome do contato como texto puro.
-    {% endcomment %}
-    {{ contact.first_name }} <br>
-    
-  {% comment %} Encerra o laço de repetição. {% endcomment %}
-  {% endfor %}
+      <thead>
+        {# Linha de cabeçalho com os títulos das colunas #}
+        <tr class="table-row table-row-header">
+          <th class="table-header">ID</th>
+          <th class="table-header">First Name</th>
+          <th class="table-header">Last Name</th>
+          <th class="table-header">Phone</th>
+          <th class="table-header">E-mail</th>
+        </tr>
+      </thead>
 
-{% comment %} Sinaliza o fim do bloco 'content'. {% endcomment %}
+      <tbody>
+        {# Inicia o loop que percorre a lista de contatos enviada pela View #}
+        {% for contact in contacts %}
+          <tr class="table-row">
+            
+            {# Exibe o ID do contato como um link clicável #}
+            <td class="table-cel">
+              <a class="table-link" href="#">
+                {{ contact.id }}
+              </a>
+            </td>
+            
+            {# Exibe o primeiro nome do contato #}
+            <td class="table-cel">
+              {{ contact.first_name }}
+            </td>
+            
+            {# Exibe o sobrenome do contato #}
+            <td class="table-cel">
+              {{ contact.last_name }}
+            </td>
+            
+            {# Exibe o telefone do contato #}
+            <td class="table-cel">
+              {{ contact.phone }}
+            </td>
+            
+            {# Exibe o e-mail do contato #}
+            <td class="table-cel">
+              {{ contact.email }}
+            </td>
+            
+          </tr>
+        {# Finaliza o loop após renderizar todos os contatos da lista #}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{# Finaliza o bloco de conteúdo #}
 {% endblock content %}
