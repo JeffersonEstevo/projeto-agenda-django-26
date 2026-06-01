@@ -1,0 +1,31 @@
+{% load static %}
+{% comment %}
+  A tag 'load static' é obrigatória no topo do arquivo. Ela avisa o motor de templates 
+  do Django para carregar o módulo de arquivos estáticos, permitindo o uso da 
+  função '{% static %}' para mapear caminhos de CSS, JavaScript e imagens.
+{% endcomment %}
+
+
+{% comment %}
+  Define a codificação de caracteres como UTF-8, garantindo que o navegador 
+  renderize corretamente acentos, emojis e caracteres especiais (ex: á, ç, õ).
+{% endcomment %}
+<meta charset="UTF-8">
+
+{% comment %}
+  Configura a janela de visualização (viewport) para tornar o site responsivo.
+  Garante que a página se ajuste automaticamente à largura da tela de celulares e tablets.
+{% endcomment %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{% comment %}
+  Define o título padrão que aparece na aba do navegador. 
+  Dica: Você pode substituir isso por um '{% block title %}' para torná-lo dinâmico.
+{% endcomment %}
+<title>{{ site_title }}Agenda</title>
+
+{% comment %}
+  Importa o arquivo CSS global do projeto. A função '{% static %}' converte o caminho 
+  'global/css/style.css' no endereço real configurado na sua variável STATIC_URL.
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'global/css/style.css' %}"> 

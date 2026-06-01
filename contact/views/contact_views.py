@@ -32,6 +32,7 @@ def index(request):
     # arquivo HTML (index.html) vai ler para exibir as informações.
     context = {
         'contacts': contacts,
+        'site_title': 'Contatos - '
     }
     
     # Retorna o arquivo HTML renderizado localizado na pasta de templates
@@ -57,11 +58,14 @@ def contact(request, contact_id):
         Contact, pk=contact_id, show=True
     )
 
+    site_title = f'{single_contact.first_name} {single_contact.last_name} - '
+
     # RELAÇÃO COM O TEMPLATE (Dicionário de Contexto):
     # Empacota o objeto do banco de dados em um dicionário. 
     # A chave dinâmica 'contact' é exatamente a variável que o seu template 'contact.html' usa para acessar os dados (ex: {{ contact.first_name }}).
     context = {
         'contact': single_contact,
+        'site_title': site_title
     }
 
     # RENDERIZAÇÃO FINAL:
