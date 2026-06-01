@@ -18,4 +18,12 @@ urlpatterns = [
     # 2. views.contact       -> Define qual função do arquivo 'views.py' vai processar essa requisição.
     # 3. name='contact'      -> Dá um apelido para a rota. Permite chamar esta URL no template sem escrever o caminho fixo.
     path('<int:contact_id>/', views.contact, name='contact'),
+
+    # DEFINIÇÃO DA ROTA DE PESQUISA:
+    # 1. 'search/'      -> Define o caminho estático da URL no navegador (ex: ://seudominio.com).
+    #                      Quando o usuário enviar uma busca, os termos irão após a barra (ex: /search/?q=termo).
+    # 2. views.search   -> Define que a função 'search' dentro do arquivo 'views.py' vai processar essa requisição.
+    # 3. name='search'  -> Dá um apelido para a rota. Permite gerar o link dinamicamente nos formulários HTML 
+    #                      usando a tag '{% url "contact:search" %}' sem precisar fixar o caminho no código.
+    path('search/', views.search, name='search'),
 ]

@@ -1,14 +1,21 @@
 # render é uma função auxiliar que une um template HTML com dados para o navegador
 # IMPORTAÇÃO: O get_object_or_404 é um atalho (shortcut) essencial do Django.
 # Sem ele, você precisaria escrever um bloco 'try/except' com a exceção 'DoesNotExist' em cada View.
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import render
+# 'redirect' -> Importa a função do Django usada para redirecionar o usuário para outra URL.
+# Importante para controlar o fluxo de navegação do site (ex: enviar o usuário de volta para a Home).
+from django.shortcuts import render, get_object_or_404, redirect
+
 # Por que você precisa importar 'contact.models'?
 # O Django trabalha com o padrão MVT (Model-View-Template). A sua View precisa buscar 
 # os dados guardados no banco de dados para poder enviá-los ao template HTML. 
 # A classe 'Contact' é a representação da sua tabela do banco de dados em código Python. 
 # Sem essa importação, a View não saberia onde buscar as informações dos contatos.
 from contact.models import Contact
+
+# 'Q' -> Importa o objeto de consultas (Query) do Django. 
+# Ele é fundamental para realizar buscas complexas usando o operador lógico "OU" (|), 
+# permitindo filtrar dados por múltiplos campos simultaneamente no banco de dados.
+from django.db.models import Q
 
 # Função que processa a requisição da página inicial
 def index(request):
@@ -40,6 +47,51 @@ def index(request):
         request,              # O objeto da requisição HTTP obrigatório
         'contact/index.html', # Caminho do arquivo HTML que será exibido
         context
+    )
+
+# Função que processa a requisição da barra de pesquisa
+def search(request):
+    # Obtém o termo digitado pelo usuário na barra de pesquisa (o parâmetro 'q' do formulário GET).
+    # .get('q', '') -> Se 'q' não existir (busca vazia), define uma string vazia como padrão.
+    # .strip()      -> Remove espaços em branco desnecessários no início e no final do termo digitado.
+    search_value = request.GET.get('q', '').strip()
+
+    # Validação de Segurança/Experiência do Usuário:
+    # Se o usuário não digitou nada ou apenas espaços, ele é redirecionado de volta para a página inicial.
+    # Isso evita que o banco de dados faça buscas vazias desnecessárias.
+    if search_value == '':
+        return redirect('contact:index')
+
+    # Consulta ao Banco de Dados (QuerySet):
+    # .filter(show=True) -> Garante que a busca só retorne contatos marcados como visíveis.
+    # .filter(Q(...) | Q(...)) -> Aplica o filtro de pesquisa. O símbolo pipe '|' funciona como o "OU" (OR) do SQL.
+    # __icontains        -> O 'i' significa 'case-insensitive' (ignora maiúsculas/minúsculas). 
+    #                       O 'contains' busca por partes do texto (ex: "ana" encontra "Ana", "Mariana" ou "Analu").
+    # .order_by('-id')   -> Ordena os resultados encontrados exibindo os mais recentes primeiro.
+    contacts = Contact.objects \
+        .filter(show=True)\
+        .filter(
+            Q(first_name__icontains=search_value) | # Busca no primeiro nome OR
+            Q(last_name__icontains=search_value)  | # Busca no sobrenome OR
+            Q(phone__icontains=search_value)      | # Busca no telefone OR
+            Q(email__icontains=search_value)        # Busca no e-mail
+        )\
+        .order_by('-id')
+
+    # Dicionário de contexto que serve como "ponte" para enviar as variáveis para o HTML.
+    # Reaproveita a variável 'contacts' exigida pelo seu template 'index.html'.
+    # Modifica o título dinâmico da página para indicar que é um resultado de busca.
+    context = {
+        'contacts': contacts,
+        'site_title': 'Search - '
+    }
+
+    # Retorna o arquivo HTML reaproveitando a mesma estrutura visual da página inicial,
+    # porém exibindo apenas os registros filtrados pela pesquisa.
+    return render(
+        request,              # O objeto da requisição HTTP obrigatório
+        'contact/index.html', # Caminho do arquivo HTML reaproveitado
+        context               # Dados filtrados enviados para o template
     )
 
 def contact(request, contact_id):

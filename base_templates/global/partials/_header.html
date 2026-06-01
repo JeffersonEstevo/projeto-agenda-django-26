@@ -34,10 +34,16 @@
       SEÇÃO 3: BARRA DE PESQUISA
       Contém um formulário que utiliza o método GET, ideal para buscas pois envia o termo digitado 
       diretamente na URL do navegador. O campo de input usa o nome "q", que será capturado pela View.
+
+      A necessidade de colocar '{% url "contact:search" %}' no 'action' é dizer ao navegador 
+      exatamente para qual endereço ele deve enviar os dados digitados. 
+      Se o 'action' ficar vazio (""), o formulário enviará a busca para a URL da própria página atual 
+      (ex: se você estiver na página de detalhes de um contato, a busca tentará rodar lá dentro). 
+      Apontar explicitamente para 'contact:search' garante que a busca sempre funcione de qualquer lugar do site.
     {% endcomment %}
     <div class="search">
       <form 
-        action="" 
+        action="{% url 'contact:search' %}" 
         method="get"
       >
         <input 
