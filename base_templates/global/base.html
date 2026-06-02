@@ -16,6 +16,8 @@
         {% block content %}
         <!-- Se você colocar algum HTML aqui, ele será o conteúdo padrão caso o filho não o altere. -->
         {% endblock content %}
+        {# Inclui o componente reutilizável de paginação global (botões Anterior/Próximo e números de página) #}
+        {% include 'global/partials/_pagination.html' %}
     </main>
 </body>
 </html>

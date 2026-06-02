@@ -6,8 +6,8 @@
 
 {# Define o bloco de conteúdo que será inserido no arquivo base do projeto #}
 {% block content %}
-  {# Verifica se a lista de contatos contém algum item #}
-{% if contacts %}
+{# Verifica se a lista de contatos contém algum item #}
+{% if page_obj %}
     <!-- Estrutura de tabela responsiva para exibir os dados dos contatos -->
     <div class="responsive-table">
       <table class="contacts-table">
@@ -29,7 +29,7 @@
         <!-- Corpo da tabela onde os dados dos contatos são renderizados -->
         <tbody>
           {# Percorre a lista de contatos e cria uma linha para cada um #}
-          {% for contact in contacts %}
+          {% for contact in page_obj %}
             <tr class="table-row">
               <!-- Coluna do ID com link para a página de detalhes do contato -->
               <td class="table-cel">

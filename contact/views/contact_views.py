@@ -17,6 +17,9 @@ from contact.models import Contact
 # permitindo filtrar dados por múltiplos campos simultaneamente no banco de dados.
 from django.db.models import Q
 
+# Importa a classe Paginator do Django para gerenciar a divisão de dados em páginas
+from django.core.paginator import Paginator
+
 # Função que processa a requisição da página inicial
 def index(request):
     # .filter(show=True) -> Filtra os resultados. Só traz os contatos onde 
@@ -29,6 +32,14 @@ def index(request):
     .filter(show=True) \
     .order_by('-id')[10:20]
     
+    # Cria o paginador dividindo a lista total de contatos ('contacts') em grupos de 10 por página
+    paginator = Paginator(contacts, 10)
+
+    # Recupera o número da página atual a partir dos parâmetros de URL (ex: ?page=2)
+    page_number = request.GET.get("page")
+
+    # Busca os contatos específicos da página atual e cria o objeto final usado no template
+    page_obj = paginator.get_page(page_number)
 
     # Exibe no terminal do servidor o comando SQL puro que o ORM do Django gerou para o banco de dados.
     # Útil para debugar e entender a performance da consulta.
@@ -77,13 +88,37 @@ def search(request):
             Q(email__icontains=search_value)        # Busca no e-mail
         )\
         .order_by('-id')
+    
+    # Cria o paginador dividindo a lista total de contatos ('contacts') em grupos de 10 por página
+    paginator = Paginator(contacts, 10)
+
+    # Recupera o número da página atual a partir dos parâmetros de URL (ex: ?page=2)
+    page_number = request.GET.get("page")
+
+    # Busca os contatos específicos da página atual e cria o objeto final usado no template
+    page_obj = paginator.get_page(page_number)
 
     # Dicionário de contexto que serve como "ponte" para enviar as variáveis para o HTML.
     # Reaproveita a variável 'contacts' exigida pelo seu template 'index.html'.
     # Modifica o título dinâmico da página para indicar que é um resultado de busca.
+    # context = {
+    #     'contacts': contacts,
+    #     'site_title': 'Search - '
+    # }
+
+    # ANTES: Enviada a lista completa e sem tratamento de páginas para o template
+    # context = {
+    #     'contacts': contacts,
+    #     'site_title': 'Search - '
+    # }
+
+    # DEPOIS: Passa o objeto paginado e atualiza o título para o idioma correto
     context = {
-        'contacts': contacts,
-        'site_title': 'Search - '
+        # Altera 'contacts' pelo 'page_obj' que contém apenas os 10 registros da página atual
+        'page_obj': page_obj,
+        
+        # Atualiza o título da aba do navegador para português e altera o termo de busca para o geral
+        'site_title': 'Contatos - '
     }
 
     # Retorna o arquivo HTML reaproveitando a mesma estrutura visual da página inicial,
