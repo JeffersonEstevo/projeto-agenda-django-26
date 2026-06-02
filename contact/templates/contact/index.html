@@ -6,72 +6,66 @@
 
 {# Define o bloco de conteúdo que será inserido no arquivo base do projeto #}
 {% block content %}
-  <div class="responsive-table">
-    <table class="contacts-table">
-      <caption class="table-caption ">
-        Contacts
-      </caption>
+  {# Verifica se a lista de contatos contém algum item #}
+{% if contacts %}
+    <!-- Estrutura de tabela responsiva para exibir os dados dos contatos -->
+    <div class="responsive-table">
+      <table class="contacts-table">
+        <caption class="table-caption ">
+          Contacts
+        </caption>
 
-      <thead>
-        {# Linha de cabeçalho com os títulos das colunas #}
-        <tr class="table-row table-row-header">
-          <th class="table-header">ID</th>
-          <th class="table-header">First Name</th>
-          <th class="table-header">Last Name</th>
-          <th class="table-header">Phone</th>
-          <th class="table-header">E-mail</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {# Inicia o loop que percorre a lista de contatos enviada pela View #}
-        {% for contact in contacts %}
-          <tr class="table-row">
-            
-            {# Exibe o ID do contato como um link clicável #}
-            <td class="table-cel">
-              {% comment %}
-                ALTERAÇÃO DO LINK: Antes o href estava vazio ("#"). 
-                Agora, usamos a tag dinâmica {% url %} do Django para gerar o link correto de forma automática.
-                
-                COMO FUNCIONA:
-                1. 'contact:contact' -> O primeiro 'contact' é o 'app_name' (Namespace) definido no seu urls.py principal.
-                                        O segundo 'contact' é o 'name="contact"' que demos para a rota específica.
-                2. contact.id        -> Passa o ID do contato atual do loop como o argumento esperado pela rota (<int:contact_id>).
-                
-                RESULTADO NA TELA:
-                Se o contact.id for 5, o Django renderizará no navegador do usuário final: href="/contact/5/"
-              {% endcomment %}
-              <a class="table-link" href="{% url 'contact:contact' contact.id %}">
-                {{ contact.id }}
-              </a>
-            </td>
-            
-            {# Exibe o primeiro nome do contato #}
-            <td class="table-cel">
-              {{ contact.first_name }}
-            </td>
-            
-            {# Exibe o sobrenome do contato #}
-            <td class="table-cel">
-              {{ contact.last_name }}
-            </td>
-            
-            {# Exibe o telefone do contato #}
-            <td class="table-cel">
-              {{ contact.phone }}
-            </td>
-            
-            {# Exibe o e-mail do contato #}
-            <td class="table-cel">
-              {{ contact.email }}
-            </td>
-            
+        <!-- Cabeçalho da tabela com os títulos das colunas -->
+        <thead>
+          <tr class="table-row table-row-header">
+            <th class="table-header">ID</th>
+            <th class="table-header">First Name</th>
+            <th class="table-header">Last Name</th>
+            <th class="table-header">Phone</th>
+            <th class="table-header">E-mail</th>
           </tr>
-        {# Finaliza o loop após renderizar todos os contatos da lista #}
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+        </thead>
+
+        <!-- Corpo da tabela onde os dados dos contatos são renderizados -->
+        <tbody>
+          {# Percorre a lista de contatos e cria uma linha para cada um #}
+          {% for contact in contacts %}
+            <tr class="table-row">
+              <!-- Coluna do ID com link para a página de detalhes do contato -->
+              <td class="table-cel">
+                <a 
+                  class="table-link" 
+                  href="{% url 'contact:contact' contact.id %}"
+                >
+                  {{ contact.id }}
+                </a>
+              </td>
+              <!-- Exibição dos dados textuais do contato -->
+              <td class="table-cel">
+                {{ contact.first_name }}
+              </td>
+              <td class="table-cel">
+                {{ contact.last_name }}
+              </td>
+              <td class="table-cel">
+                {{ contact.phone }}
+              </td>
+              <td class="table-cel">
+                {{ contact.email }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {# Bloco executado caso a lista "contacts" esteja vazia ou não exista #}
+  {% else %}
+    <!-- Mensagem de feedback visual informando a ausência de registros -->
+    <div class="single-contact">
+      <h1 class="single-contact-name">
+        Nenhum contato encontrado.
+      </h1>
+    </div>
+  {% endif %}
 {# Finaliza o bloco de conteúdo #}
 {% endblock content %}
