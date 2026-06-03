@@ -27,10 +27,11 @@ def index(request):
     # .order_by('-id')   -> Ordena os dados. O sinal de menos '-' 
     # indica ordem decrescente (do ID maior para o menor / mais recentes primeiro).
     # [10:20]            -> Faz o fatiamento (Slicing). Cria uma paginação que 
+    # .order_by('-id')[10:20]
     # pula os 10 primeiros registros e pega do 11º ao 20º.
     contacts = Contact.objects \
     .filter(show=True) \
-    .order_by('-id')[10:20]
+    .order_by('-id')
     
     # Cria o paginador dividindo a lista total de contatos ('contacts') em grupos de 10 por página
     paginator = Paginator(contacts, 10)
@@ -49,7 +50,7 @@ def index(request):
     # A chave em string 'contacts' será o nome da variável que o seu 
     # arquivo HTML (index.html) vai ler para exibir as informações.
     context = {
-        'contacts': contacts,
+        'contacts': page_obj,
         'site_title': 'Contatos - '
     }
     
@@ -118,7 +119,10 @@ def search(request):
         'page_obj': page_obj,
         
         # Atualiza o título da aba do navegador para português e altera o termo de busca para o geral
-        'site_title': 'Contatos - '
+        'site_title': 'Contatos - ',
+
+        # Mantém o termo pesquisado no campo de busca para o usuário ver o que digitou
+        'search_value': search_value,
     }
 
     # Retorna o arquivo HTML reaproveitando a mesma estrutura visual da página inicial,

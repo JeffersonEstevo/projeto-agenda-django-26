@@ -17,7 +17,7 @@ urlpatterns = [
     #                           O Django salva esse número em uma variável chamada 'contact_id'.
     # 2. views.contact       -> Define qual função do arquivo 'views.py' vai processar essa requisição.
     # 3. name='contact'      -> Dá um apelido para a rota. Permite chamar esta URL no template sem escrever o caminho fixo.
-    path('<int:contact_id>/', views.contact, name='contact'),
+    # path('<int:contact_id>/', views.contact, name='contact'),
 
     # DEFINIÇÃO DA ROTA DE PESQUISA:
     # 1. 'search/'      -> Define o caminho estático da URL no navegador (ex: ://seudominio.com).
@@ -26,4 +26,19 @@ urlpatterns = [
     # 3. name='search'  -> Dá um apelido para a rota. Permite gerar o link dinamicamente nos formulários HTML 
     #                      usando a tag '{% url "contact:search" %}' sem precisar fixar o caminho no código.
     path('search/', views.search, name='search'),
+
+
+    # contact (CRUD) - Definição das rotas para o gerenciamento completo de contatos
+    # 1. Rota de Leitura (Read): Exibe os detalhes de um contato específico com base no ID
+    # path('contact/<int:contact_id>/detail/', views.contact, name='contact'),
+    # 2. Rota de Criação (Create): Exibe o formulário e processa o cadastro de novos contatos
+    # path('contact/create/', views.contact, name='contact'),
+    # 3. Rota de Atualização (Update): Exibe o formulário de edição e salva as alterações do contato
+    # path('contact/<int:contact_id>/update/', views.contact, name='contact'),
+    # 4. Rota de Deleção (Delete): Processa a exclusão permanente de um contato específico
+    # path('contact/<int:contact_id>/delete/', views.contact, name='contact'),
+
+    # contact (CRUD) - Definição das rotas para o gerenciamento completo de contatos
+    # 1. Rota de Leitura (Read): Exibe os detalhes de um contato específico com base no ID
+    path('contact/<int:contact_id>', views.contact, name='contact'),
 ]
