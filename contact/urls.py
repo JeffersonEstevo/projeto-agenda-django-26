@@ -41,4 +41,6 @@ urlpatterns = [
     # contact (CRUD) - Definição das rotas para o gerenciamento completo de contatos
     # 1. Rota de Leitura (Read): Exibe os detalhes de um contato específico com base no ID
     path('contact/<int:contact_id>', views.contact, name='contact'),
+    # 2. Rota de Criação (Create): Exibe o formulário e processa o cadastro de novos contatos
+    path('contact/create/', views.create, name='create'),
 ]

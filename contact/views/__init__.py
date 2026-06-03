@@ -1,6 +1,7 @@
 # O '.' indica uma importação relativa. Significa: "procure o módulo 'contact_views' 
 # dentro deste mesmo pacote/pasta em que o arquivo __init__.py está localizado".
 from .contact_views import *
+from .contact_forms import *
 
 # 1. Por que importar assim?
 # Isso cria um pacote de views. Em vez de ter um único arquivo 'views.py' com milhares 
