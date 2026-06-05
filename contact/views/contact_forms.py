@@ -10,15 +10,19 @@ from contact.models import Contact
 
 
 # Define a view 'create' responsável por renderizar a página de criação de novos contatos
+# Define a função da view 'create' que recebe a requisição HTTP do usuário
 def create(request):
-    # Inicializa o dicionário de contexto que enviará dados e variáveis para o template HTML
+    # Armazena os dados enviados via POST (comumente usado para ativar a validação do token CSRF)
+    post = request.POST 
+
+    # Inicializa um dicionário vazio para armazenar as variáveis que serão enviadas ao HTML
     context = {
 
     }
 
-    # Renderiza e retorna o arquivo HTML 'create.html', passando os dados do contexto
+    # Renderiza o template HTML e retorna a resposta formatada para o navegador do usuário
     return render(
-        request,
-        'contact/create.html',
-        context
+        request,             # Passa o objeto de requisição original
+        'contact/create.html', # Define o caminho do arquivo de template que será exibido
+        context              # Envia o dicionário de contexto para o template
     )

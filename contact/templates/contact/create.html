@@ -16,6 +16,11 @@
       method="POST" 
       enctype="multipart/form-data" 
     >
+    {% comment %} 
+    Gera um input oculto com um token de segurança para proteger o formulário 
+    contra ataques CSRF (falsificação de solicitação entre sites) 
+    {% endcomment %}
+    {% csrf_token %}
 
       {# Bloco visual para agrupar os campos de entrada do formulário #}
       <div class="form-content">
