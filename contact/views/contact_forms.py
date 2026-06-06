@@ -13,12 +13,23 @@ from contact.models import Contact
 # Define a função da view 'create' que recebe a requisição HTTP do usuário
 def create(request):
     # Armazena os dados enviados via POST (comumente usado para ativar a validação do token CSRF)
-    post = request.POST 
+    if request.method == 'POST':
+        print()
+        print(request.method)
+        print(request.POST.get('first_name'))
+        print(request.POST.get('last_name'))
+        print()
 
     # Inicializa um dicionário vazio para armazenar as variáveis que serão enviadas ao HTML
     context = {
 
     }
+
+    # Mostra que se a url for digitada diretamente o método é GET
+    # Se o formulário for enviado o método é POST
+    print()
+    print(request.method)
+    print()
 
     # Renderiza o template HTML e retorna a resposta formatada para o navegador do usuário
     return render(
