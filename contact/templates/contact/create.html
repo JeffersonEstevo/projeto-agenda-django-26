@@ -24,20 +24,41 @@
 
       {# Bloco visual para agrupar os campos de entrada do formulário #}
       <div class="form-content">
-        {# Estrutura de estilo para um campo específico (Label + Input) #}
-        <div class="form-group">
-          {# Rótulo visual ligado ao campo de texto pelo ID do elemento #}
-          <label for="id_first_name">first_name</label>
-          {# Campo de texto HTML puro configurado para receber o valor do 'first_name' #}
-          <input type="text" name="first_name" maxlength="255" id="id_first_name">
-        </div>
-
-        <div class="form-group">
-          <label for="id_last_name">last_name</label>
-          <input type="text" name="last_name" maxlength="255" id="id_last_name">
-        </div>
-      </div>
-
+        {# Inicia um laço de repetição que percorre cada um dos campos definidos no formulário Django #}
+        {% for field in form %}
+                  {# Cria uma caixa de agrupamento HTML para organizar visualmente o rótulo e o campo de entrada #}
+                  <div class="form-group">
+                    {# Renderiza a etiqueta de texto do campo, vinculando-a ao ID correto gerado automaticamente pelo Django #}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {# Renderiza o elemento de entrada HTML correspondente ao tipo do campo (ex: input, select, textarea) #}
+                    {{ field }}
+                    {# Renderiza uma lista contendo as mensagens de erro de validação específicas deste campo, se houverem #}
+                    {{ field.errors }}
+                  {# Fecha a tag div de agrupamento do campo atual #}
+                  </div>
+                {# Encerra o laço de repetição que percorre os campos do formulário #}
+        {% endfor %}
+      </div>         
+      
+      {# Verifica se existem erros globais no formulário que não pertencem a um campo específico #}
+      {% if form.non_field_errors %}
+              {# Cria um container estrutural para o bloco de mensagens do formulário #}
+              <div class="form-content">
+                {# Cria um container de agrupamento para manter o alinhamento visual padrão dos elementos #}
+                <div class="form-group">
+                  {# Cria um bloco visual estilizado especificamente para exibir alertas de erro na interface #}
+                  <div class="message error">
+                    {# Renderiza a lista de mensagens de erros gerais que foram capturados na validação do formulário #}
+                    {{ form.non_field_errors }}
+                  {# Fecha o bloco de alerta de erro #}
+                  </div>
+                {# Fecha o container de agrupamento visual #}
+                </div>
+              {# Fecha o container estrutural #}
+              </div>
+            {# Encerra o bloco condicional de verificação de erros globais do formulário #}
+      {% endif %}
+      
       {# Bloco visual reservado para a área de ações do formulário #}
       <div class="form-content">
         {# Estrutura de estilo para alinhar o botão de envio #}
