@@ -26,17 +26,24 @@
       <div class="form-content">
         {# Inicia um laço de repetição que percorre cada um dos campos definidos no formulário Django #}
         {% for field in form %}
-                  {# Cria uma caixa de agrupamento HTML para organizar visualmente o rótulo e o campo de entrada #}
-                  <div class="form-group">
-                    {# Renderiza a etiqueta de texto do campo, vinculando-a ao ID correto gerado automaticamente pelo Django #}
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {# Renderiza o elemento de entrada HTML correspondente ao tipo do campo (ex: input, select, textarea) #}
-                    {{ field }}
-                    {# Renderiza uma lista contendo as mensagens de erro de validação específicas deste campo, se houverem #}
-                    {{ field.errors }}
-                  {# Fecha a tag div de agrupamento do campo atual #}
-                  </div>
-                {# Encerra o laço de repetição que percorre os campos do formulário #}
+            {# Cria uma caixa de agrupamento HTML para organizar visualmente o rótulo e o campo de entrada #}
+            <div class="form-group">
+              {# Renderiza a etiqueta de texto do campo, vinculando-a ao ID correto gerado automaticamente pelo Django #}
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {# Renderiza o elemento de entrada HTML correspondente ao tipo do campo (ex: input, select, textarea) #}
+              {{ field }}
+              {# Renderiza uma lista contendo as mensagens de erro de validação específicas deste campo, se houverem #}
+              {{ field.errors }}
+
+              {# Verifica se o campo do formulário possui algum texto de ajuda cadastrado no Python #}
+              {% if field.help_text %}
+                {# Cria um parágrafo formatado com a classe CSS para exibir a mensagem na página #}
+                <p class="help-text">{{ field.help_text }}</p>
+              {# Encerra o bloco de teste condicional #}
+              {% endif %}
+            {# Fecha a tag div de agrupamento do campo atual #}
+            </div>
+          {# Encerra o laço de repetição que percorre os campos do formulário #}
         {% endfor %}
       </div>         
       
