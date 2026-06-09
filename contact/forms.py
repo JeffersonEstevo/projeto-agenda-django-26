@@ -61,23 +61,43 @@ class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as 
         # }
 
     def clean(self):  # Define o método clean para realizar validações personalizadas no formulário
-        # cleaned_data = self.cleaned_data  # Recupera o dicionário com os dados que já foram validados individualmente
+        # Armazena o dicionário de dados já limpos e validados pelo Django nesta variável local
+        cleaned_data = self.cleaned_data
+        # Busca de forma segura o valor do campo 'first_name' dentro do dicionário de dados limpos
+        first_name = cleaned_data.get('first_name')
+        # Busca de forma segura o valor do campo 'last_name' dentro do dicionário de dados limpos
+        last_name = cleaned_data.get('last_name')
 
-        self.add_error(  # Registra um erro de validação específico no formulário
-            'first_name',  # Vincula o erro diretamente ao campo 'first_name'
-            ValidationError(  # Instancia uma exceção de erro de validação do Django
-                'Mensagem de erro',  # Define o texto explicativo do primeiro erro
-                code='invalid'  # Define o código identificador da falha ('invalid')
-            )  # Fecha a instância do primeiro ValidationError
-        )  # Fecha a execução do primeiro add_error
-        
-        self.add_error(  # Registra um segundo erro de validação no formulário
-            'first_name',  # Vincula este novo erro também ao campo 'first_name'
-            ValidationError(  # Instancia uma nova exceção de erro de validação
-                'Mensagem de erro 2',  # Define o texto explicativo do segundo erro
-                code='invalid'  # Define o código identificador desta segunda falha
-            )  # Fecha a instância do segundo ValidationError
-        )  # Fecha a execução do segundo add_error
+        # Compara se o texto digitado no primeiro nome é exatamente igual ao sobrenome
+        if first_name == last_name:
+            # Cria a instância do erro com a mensagem de alerta e o código de identificação
+            msg = ValidationError(
+                'Primeiro nome não pode ser igual ao segundo',
+                code='invalid'
+            )
+            # Vincula e exibe essa mensagem de erro especificamente no campo do primeiro nome
+            self.add_error('first_name', msg)
+            # Vincula e exibe a mesma mensagem de erro também no campo do sobrenome
+            self.add_error('last_name', msg)
 
         return super().clean()  # Executa e retorna a lógica de validação padrão da classe mãe do Django
 
+    # Declara o método que o Django executa automaticamente para validar o campo 'first_name'
+    def clean_first_name(self):
+        # Recupera com segurança o valor já pré-validado do campo 'first_name' no dicionário de dados limpos
+        first_name = self.cleaned_data.get('first_name')
+
+        # Avalia se a string digitada pelo usuário no formulário é exatamente igual a 'ABC'
+        if first_name == 'ABC':
+            # Registra um erro de validação vinculado especificamente ao campo 'first_name'
+            self.add_error(
+                'first_name', # Define o nome do campo do formulário que receberá o erro
+                ValidationError( # Instancia o objeto de erro do Django
+                    'Veio do add_error', # Define o texto da mensagem que será exibida na tela
+                    code='invalid' # Categoriza o tipo do erro com o identificador 'invalid'
+                )
+            )
+
+        # Devolve o valor do campo (tratado) para o formulário, garantindo que ele não fique vazio/None
+        return first_name
+    
