@@ -1,5 +1,6 @@
 # Importa atalhos essenciais: buscar objeto ou retornar 404, redirecionar rotas e renderizar templates HTML
-from django.shortcuts import render
+# Importa a função redirect para redirecionar o usuário para outra página
+from django.shortcuts import render, redirect
 
 # Importa a classe ContactForm do arquivo 'forms.py' localizado na pasta 'contact'.
 # Esse formulário geralmente gerencia os campos e a validação de uma página de contato.
@@ -10,11 +11,8 @@ from contact.forms import ContactForm
 def create(request):
     # Armazena os dados enviados via POST (comumente usado para ativar a validação do token CSRF)
     if request.method == 'POST':
-        print()
-        print(request.method)
-        print(request.POST.get('first_name'))
-        print(request.POST.get('last_name'))
-        print()
+        # Cria uma instância do formulário preenchida com os dados enviados pelo usuário
+        form = ContactForm(request.POST)
 
         context = {  # Cria um dicionário chamado context para estruturar os dados que o template vai usar
             'form': ContactForm(request.POST)  # Cria o formulário e o preenche com os dados enviados pelo usuário via POST
@@ -29,6 +27,14 @@ def create(request):
     context = {  # Cria ou sobrescreve o dicionário chamado context para estruturar os dados do template
         'form': ContactForm()  # Instancia uma versão nova, limpa e completamente vazia do formulário
     }  # Fecha a definição deste novo dicionário context
+
+    # Verifica se todos os dados enviados são válidos e seguem as regras do formulário
+    if form.is_valid():
+        # Salva os dados validados no banco de dados (cria ou atualiza o registro)
+        form.save()
+        
+        # Redireciona o navegador do usuário para a URL correspondente à rota 'contact:create'
+        return redirect('contact:create')
 
     return render(  # Invoca novamente a função render para construir a resposta HTTP, agora com o formulário limpo
         request,  # Passa o objeto da requisição atual contendo os metadados do usuário
