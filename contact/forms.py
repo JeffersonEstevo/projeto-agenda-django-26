@@ -43,6 +43,9 @@ class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as 
             'first_name',  # Inclui o campo do primeiro nome no formulário
             'last_name',  # Inclui o campo do sobrenome no formulário
             'phone',  # Inclui o campo do telefone no formulário
+            'email',  # Inclui o campo do email no formulário
+            'description', # Inclui o campo de descrição no formulário
+            'category', # Inclui o campo de categoria no formulário
         )  # Fecha a tupla de especificação dos campos
 
         # O dicionário 'widgets' serve para customizar a renderização HTML de cada campo
