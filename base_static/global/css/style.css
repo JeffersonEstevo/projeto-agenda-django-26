@@ -312,3 +312,43 @@ svg {
   filter: brightness(80%);
   box-shadow: 0 0 5px var(--link-dark-color);
 }
+
+/* ==========================================
+   SEÇÃO: DELETAR CONTATO 
+   Este bloco estiliza os links e botões da
+   área de exclusão de contatos do sistema.
+   ========================================== */
+
+/* Contêiner que agrupa os links de contato */
+.contact-links {
+  /* Define as margens superior e inferior baseadas no dobro do tamanho da fonte pequena */
+  margin-block: calc(var(--small-font-size) * 2);
+  /* Alinha os itens internamente em uma linha horizontal */
+  display: flex;
+  /* Centraliza verticalmente o conteúdo dos links */
+  align-items: center;
+  /* Cria um espaçamento horizontal de segurança entre os botões */
+  gap: 0 var(--spacing);
+}
+
+/* Estilo base para os botões em formato de link */
+.btn-link {
+  /* Aplica o tamanho de fonte reduzido definido na variável global */
+  font-size: var(--small-font-size);
+  /* Remove o sublinhado padrão dos links (<a>) */
+  text-decoration: none;
+  /* Deixa o texto em negrito para dar destaque visual */
+  font-weight: bold;
+  /* Adiciona espaçamento interno para aumentar a área de clique */
+  padding: 1rem;
+  /* Transforma o elemento em bloco para respeitar as margens e paddings */
+  display: block;
+  /* Ajusta a altura da linha para corresponder exatamente ao tamanho do texto */
+  line-height: var(--small-font-size);
+}
+
+/* Botão específico para a ação de DELETAR o contato */
+.btn-delete {
+  /* Aplica a cor de fundo 'tomato' (um tom de vermelho) para indicar perigo/exclusão */
+  background: tomato;
+}

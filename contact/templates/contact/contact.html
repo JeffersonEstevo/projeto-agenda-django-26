@@ -32,5 +32,35 @@
       Exemplo: Se a categoria for um modelo separado, ele traz o campo '.name' dela.
     {% endcomment %}
     <p><b>Category:</b> {{ contact.category.name }}</p>
+
+    {# Contêiner principal que agrupa as ações de gerenciamento do contato (Editar e Deletar) #}
+    <div class="contact-links">
+      
+      {# Link direcionado para a tela de edição, passando o ID do contato atual na URL #}
+      <a class="btn btn-link" href="{% url 'contact:update' contact.id %}">Update</a>
+
+      {# Formulário seguro para exclusão do contato usando o método POST #}
+      <form action="{% url 'contact:delete' contact.id %}" method="POST">
+        
+        {# Token de segurança obrigatório do Django para prevenir ataques CSRF #}
+        {% csrf_token %}
+
+        {% comment %}
+          MECANISMO DE CONFIRMAÇÃO DE EXCLUSÃO:
+          Se o contexto indicar que ainda não houve confirmação ('no'),
+          exibe um botão de "Confirma?" e envia um campo oculto com valor "yes".
+          Caso contrário, exibe o botão padrão "Delete".
+        {% endcomment %}
+        {% if confirmation == 'no' %}
+          {# Campo oculto que avisa o backend que a exclusão foi confirmada pelo usuário #}
+          <input type="hidden" name="confirmation" value="yes">
+          <button class="btn btn-link btn-delete" type="submit">Confirma?</button>
+        {% else %}
+          {# Botão inicial que o usuário clica para iniciar o fluxo de deleção #}
+          <button class="btn btn-link btn-delete" type="submit">Delete</button>
+        {% endif %}
+        
+      </form>
+    </div>
   </div>
 {% endblock content %}

@@ -45,4 +45,6 @@ urlpatterns = [
     path('contact/create/', views.create, name='create'),
     # 3. Rota de Atualização (Update): Exibe o formulário de edição e salva as alterações do contato
     path('contact/<int:contact_id>/update/', views.update, name='update'),
+    # 4. Rota de Deleção (Delete): Processa a exclusão permanente de um contato específico
+    path('contact/<int:contact_id>/delete/', views.delete, name='delete'),
 ]

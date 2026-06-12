@@ -176,3 +176,33 @@ def update(request, contact_id):
         'form_action': form_action,
     }
     return render(request, 'contact/create.html', context)
+
+# Controller/View responsável por gerenciar a exclusão segura de um contato
+def delete(request, contact_id):
+    # Busca o contato pelo ID (pk) se ele estiver marcado como visível (show=True).
+    # Retorna um erro 404 (Página não encontrada) caso o contato não exista ou esteja oculto.
+    contact = get_object_or_404(
+        Contact, pk=contact_id, show=True
+    )
+    
+    # Captura o valor do campo oculto 'confirmation' enviado via POST pelo formulário.
+    # Se o campo não for enviado (ex: primeiro clique ou acesso via GET), define 'no' como padrão.
+    confirmation = request.POST.get('confirmation', 'no')
+
+    # Se o valor capturado for 'yes', significa que o usuário confirmou a ação no segundo clique
+    if confirmation == 'yes':
+        # Remove o contato definitivamente do banco de dados
+        contact.delete()
+        # Redireciona o usuário de volta para a página inicial (lista de contatos)
+        return redirect('contact:index')
+
+    # Caso o usuário ainda não tenha confirmado ('no'), recarrega a página atual do contato
+    # enviando a variável 'confirmation' para o template alternar o botão para "Confirma?"
+    return render(
+        request,
+        'contact/contact.html',
+        {
+            'contact': contact,
+            'confirmation': confirmation,
+        }
+    )
