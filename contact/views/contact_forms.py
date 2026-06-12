@@ -1,43 +1,178 @@
-# Importa atalhos essenciais: buscar objeto ou retornar 404, redirecionar rotas e renderizar templates HTML
-# Importa a função redirect para redirecionar o usuário para outra página
-from django.shortcuts import render, redirect
+# # Importa atalhos essenciais: buscar objeto ou retornar 404, redirecionar rotas e renderizar templates HTML
+# # Importa a função redirect para redirecionar o usuário para outra página
+# # Permite buscar um registro no banco de dados. 
+# # Se o registro existir, ele o retorna; se não existir, gera automaticamente um erro 404 (Página não encontrada).
+# # É usado para evitar que o site quebre (erro 500) quando um usuário tenta acessar um contato que foi deletado ou não existe.
+# from django.shortcuts import get_object_or_404, redirect, render
 
-# Importa a classe ContactForm do arquivo 'forms.py' localizado na pasta 'contact'.
-# Esse formulário geralmente gerencia os campos e a validação de uma página de contato.
+# # Permite descobrir a URL real de uma rota a partir do "nome" que você deu a ela no arquivo urls.py.
+# # É usado para que você não precise digitar URLs manualmente (como '/contato/salvar/'). 
+# # Assim, se você mudar a estrutura das URLs do site no futuro, seu código não quebra.
+# from django.urls import reverse
+
+# # Importa a classe (modelo) que representa a tabela de contatos no banco de dados.
+# # É usado para que o Django saiba como ler, criar, atualizar ou deletar os dados cadastrados na tabela de Contatos.
+# from contact.models import Contact
+
+# # Importa a classe ContactForm do arquivo 'forms.py' localizado na pasta 'contact'.
+# # Esse formulário geralmente gerencia os campos e a validação de uma página de contato.
+# from contact.forms import ContactForm
+
+# # Define a view 'create' responsável por renderizar a página de criação de novos contatos
+# # Define a função da view 'create' que recebe a requisição HTTP do usuário
+# def create(request):
+#     # Busca dinamicamente a URL da rota nomeada 'create' que está dentro do namespace 'contact'.
+#     # O resultado (ex: '/contact/create/') é guardado na variável 'form_action' para ser enviado ao template.
+#     form_action = reverse('contact:create')
+    
+#     # Armazena os dados enviados via POST (comumente usado para ativar a validação do token CSRF)
+#     if request.method == 'POST':
+#         # Cria uma instância do formulário preenchida com os dados enviados pelo usuário
+#         form = ContactForm(request.POST)
+
+#         context = {  # Cria um dicionário chamado context para estruturar os dados que o template vai usar
+#             'form': form,
+#             'form_action': form_action,
+#         }
+
+#         if form.is_valid():
+#             contact = form.save()
+#             return redirect('contact:update', contact_id=contact.pk)
+
+#         return render(
+#             request,
+#             'contact/create.html',
+#             context
+#         )
+
+#     context = {
+#         'form': ContactForm(),
+#         'form_action': form_action,
+#     }
+
+#     return render(
+#         request,
+#         'contact/create.html',
+#         context
+#     )
+
+
+# def update(request, contact_id):
+#     contact = get_object_or_404(
+#         Contact, pk=contact_id, show=True
+#     )
+#     form_action = reverse('contact:update', args=(contact_id,))
+
+#     if request.method == 'POST':
+#         form = ContactForm(request.POST, instance=contact)
+
+#         context = {
+#             'form': form,
+#             'form_action': form_action,
+#     }  # Fecha a definição deste novo dicionário context
+
+#     # Verifica se todos os dados enviados são válidos e seguem as regras do formulário
+#     if form.is_valid():
+#         # Salva os dados validados no banco de dados (cria ou atualiza o registro)
+#         contact = form.save()
+        
+#         return redirect('contact:update', contact_id=contact.pk)
+
+#     return render(  # Invoca novamente a função render para construir a resposta HTTP, agora com o formulário limpo
+#         request,  # Passa o objeto da requisição atual contendo os metadados do usuário
+#         'contact/create.html',  # Especifica o mesmo caminho relativo do template HTML que será exibido
+#         context  # Envia o dicionário de dados para dentro do HTML
+#     )  # Fecha a execução da segunda função render
+
+#     context = {
+#         'form': ContactForm(instance=contact),
+#         'form_action': form_action,
+#     }
+
+#     return render(  # Invoca novamente a função render para construir a resposta HTTP, agora com o formulário limpo
+#         request,  # Passa o objeto da requisição atual contendo os metadados do usuário
+#         'contact/create.html',  # Especifica o mesmo caminho relativo do template HTML que será exibido
+#         context  # Envia o dicionário de dados para dentro do HTML
+#     )  # Fecha a execução da segunda função render
+
+
+# Importa atalhos essenciais: buscar objeto ou retornar 404, redirecionar rotas e renderizar templates HTML
+from django.shortcuts import get_object_or_404, redirect, render
+# Permite descobrir a URL real de uma rota a partir do "nome" que você deu a ela no arquivo urls.py
+from django.urls import reverse
+# Importa a classe (modelo) que representa a tabela de contatos no banco de dados
+from contact.models import Contact
+# Importa a classe ContactForm do arquivo 'forms.py' localizado na pasta 'contact'
 from contact.forms import ContactForm
 
-# Define a view 'create' responsável por renderizar a página de criação de novos contatos
-# Define a função da view 'create' que recebe a requisição HTTP do usuário
+
 def create(request):
-    # Armazena os dados enviados via POST (comumente usado para ativar a validação do token CSRF)
+    """View responsável por exibir e processar a criação de um novo contato."""
+    # Define dinamicamente a URL de destino para onde o formulário enviará os dados (ele mesmo)
+    form_action = reverse('contact:create')
+    
+    # Se o usuário clicou no botão de enviar (submeteu o formulário)
     if request.method == 'POST':
-        # Cria uma instância do formulário preenchida com os dados enviados pelo usuário
+        # Cria uma instância do formulário preenchida com os dados que vieram do navegador
         form = ContactForm(request.POST)
 
-        context = {  # Cria um dicionário chamado context para estruturar os dados que o template vai usar
-            'form': ContactForm(request.POST)  # Cria o formulário e o preenche com os dados enviados pelo usuário via POST
-        }  # Fecha a definição do dicionário context
+        # Se todos os campos forem preenchidos corretamente de acordo com as regras do formulário
+        if form.is_valid():
+            # Salva o novo contato no banco de dados
+            contact = form.save()
+            # REDIRECIONAMENTO CRÍTICO: Envia o usuário para a página de edição do contato criado.
+            # Isso limpa a requisição POST do navegador, impedindo que o usuário crie o contato 
+            # duplicado caso aperte F5 ou recarregue a página.
+            return redirect('contact:update', contact_id=contact.pk)
 
-        return render(  # Invoca a função render para construir e retornar a resposta HTTP com a página HTML processada
-                request,  # Passa o objeto da requisição atual contendo os dados do navegador e do usuário
-                'contact/create.html',  # Especifica o caminho relativo do template HTML que será renderizado na tela
-                context  # Envia o dicionário de dados para que suas variáveis sejam usadas dentro do HTML
-            )  # Fecha a execução da primeira função render
+        # Se o formulário for inválido, o código continua aqui e renderiza a página exibindo os erros
+        context = {
+            'form': form,
+            'form_action': form_action,
+        }
+        return render(request, 'contact/create.html', context)
 
-    context = {  # Cria ou sobrescreve o dicionário chamado context para estruturar os dados do template
-        'form': ContactForm()  # Instancia uma versão nova, limpa e completamente vazia do formulário
-    }  # Fecha a definição deste novo dicionário context
+    # Se o método for GET (usuário acabou de entrar na página), exibe o formulário totalmente limpo
+    context = {
+        'form': ContactForm(),
+        'form_action': form_action,
+    }
+    return render(request, 'contact/create.html', context)
 
-    # Verifica se todos os dados enviados são válidos e seguem as regras do formulário
-    if form.is_valid():
-        # Salva os dados validados no banco de dados (cria ou atualiza o registro)
-        form.save()
-        
-        # Redireciona o navegador do usuário para a URL correspondente à rota 'contact:create'
-        return redirect('contact:create')
 
-    return render(  # Invoca novamente a função render para construir a resposta HTTP, agora com o formulário limpo
-        request,  # Passa o objeto da requisição atual contendo os metadados do usuário
-        'contact/create.html',  # Especifica o mesmo caminho relativo do template HTML que será exibido
-        context  # Envia o dicionário de dados para dentro do HTML
-    )  # Fecha a execução da segunda função render
+def update(request, contact_id):
+    """View responsável por buscar um contato existente, exibir seus dados e salvar alterações."""
+    # Busca o contato pelo ID (pk). Se não existir ou se show=False, joga o usuário direto para a tela 404
+    contact = get_object_or_404(Contact, pk=contact_id, show=True)
+    
+    # Define dinamicamente a URL de edição passando o ID do contato atual como argumento (ex: '/contact/update/5/')
+    form_action = reverse('contact:update', args=(contact_id,))
+
+    # Se o usuário clicou em salvar as alterações do contato
+    if request.method == 'POST':
+        # Preenche o formulário com os novos dados enviados pelo POST, 
+        # mas vincula ao objeto 'contact' antigo para que o Django saiba que deve ATUALIZAR e não criar um novo.
+        form = ContactForm(request.POST, instance=contact)
+
+        # Se os novos dados forem válidos
+        if form.is_valid():
+            # Atualiza o registro existente no banco de dados
+            contact = form.save()
+            # Redireciona para si mesmo (página de update). Isso atualiza a página de forma limpa, 
+            # exibe os dados salvos e previne reenvios acidentais de dados.
+            return redirect('contact:update', contact_id=contact.pk)
+
+        # Se a validação falhar (ex: digitou algo errado), monta o contexto com os erros para o usuário corrigir
+        context = {
+            'form': form,
+            'form_action': form_action,
+        }
+        return render(request, 'contact/create.html', context)
+
+    # Se o método for GET (usuário acabou de entrar na página para editar), 
+    # joga os dados atuais do contato buscado do banco de dados para dentro dos campos do formulário
+    context = {
+        'form': ContactForm(instance=contact),
+        'form_action': form_action,
+    }
+    return render(request, 'contact/create.html', context)

@@ -8,11 +8,11 @@
     <h2>Contact</h2>
     
     {# Inicia o formulário HTML #}
-    {# action= Envia os dados para a mesma URL que renderizou a página #}
-    {# method="POST" Define o método HTTP seguro para envio de dados sensíveis #}
-    {# enctype= Obrigatório no Django para permitir o upload de arquivos e mídias #}
+    {# action: Define dinamicamente para onde os dados do formulário serão enviados #}
+    {# method="POST": Define o método HTTP seguro para envio de dados sensíveis #}
+    {# enctype: Obrigatório para permitir o upload de arquivos e mídias (como fotos de contatos) #}
     <form 
-      action="{% url 'contact:create' %}"
+      action="{{ form_action }}" 
       method="POST" 
       enctype="multipart/form-data" 
     >

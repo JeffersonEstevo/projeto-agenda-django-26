@@ -43,4 +43,6 @@ urlpatterns = [
     path('contact/<int:contact_id>', views.contact, name='contact'),
     # 2. Rota de Criação (Create): Exibe o formulário e processa o cadastro de novos contatos
     path('contact/create/', views.create, name='create'),
+    # 3. Rota de Atualização (Update): Exibe o formulário de edição e salva as alterações do contato
+    path('contact/<int:contact_id>/update/', views.update, name='update'),
 ]
