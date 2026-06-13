@@ -33,6 +33,17 @@
     {% endcomment %}
     <p><b>Category:</b> {{ contact.category.name }}</p>
 
+    {% comment %}
+      Verifica se o contato possui uma foto cadastrada.
+      Se houver, exibe a imagem na tela usando a URL do arquivo e o nome completo do contato como texto alternativo.
+    {% endcomment %}
+
+    {% if contact.picture %}
+        <p>
+          <img src="{{ contact.picture.url }}" alt="{{ contact.first_name }} {{ contact.last_name }}">
+        </p>
+    {% endif %}
+
     {# Contêiner principal que agrupa as ações de gerenciamento do contato (Editar e Deletar) #}
     <div class="contact-links">
       

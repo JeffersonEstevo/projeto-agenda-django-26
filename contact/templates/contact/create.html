@@ -43,6 +43,17 @@
               {% endif %}
             {# Fecha a tag div de agrupamento do campo atual #}
             </div>
+
+            {% comment %}
+              Verifica se o campo atual do formulário é o de foto ('picture') e se ele já possui um arquivo enviado.
+              Se verdadeiro, exibe uma prévia da imagem existente dentro de um container com a classe Bootstrap 'form-group'.
+            {% endcomment %}
+            {% if field.name == 'picture' and field.value.url %}
+                <div class="form-group">
+                  <img src="{{ field.value.url }}" alt="">
+                </div>
+            {% endif %}
+
           {# Encerra o laço de repetição que percorre os campos do formulário #}
         {% endfor %}
       </div>         

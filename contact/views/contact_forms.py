@@ -114,7 +114,14 @@ def create(request):
     # Se o usuário clicou no botão de enviar (submeteu o formulário)
     if request.method == 'POST':
         # Cria uma instância do formulário preenchida com os dados que vieram do navegador
-        form = ContactForm(request.POST)
+        # e com os arquivos de upload, como fotos e documentos (request.FILES)
+        form = ContactForm(request.POST, request.FILES)
+
+        # Se o formulário for inválido, o código continua aqui e renderiza a página exibindo os erros
+        context = {
+            'form': form,
+            'form_action': form_action,
+        }
 
         # Se todos os campos forem preenchidos corretamente de acordo com as regras do formulário
         if form.is_valid():
@@ -125,11 +132,7 @@ def create(request):
             # duplicado caso aperte F5 ou recarregue a página.
             return redirect('contact:update', contact_id=contact.pk)
 
-        # Se o formulário for inválido, o código continua aqui e renderiza a página exibindo os erros
-        context = {
-            'form': form,
-            'form_action': form_action,
-        }
+        
         return render(request, 'contact/create.html', context)
 
     # Se o método for GET (usuário acabou de entrar na página), exibe o formulário totalmente limpo
@@ -152,7 +155,14 @@ def update(request, contact_id):
     if request.method == 'POST':
         # Preenche o formulário com os novos dados enviados pelo POST, 
         # mas vincula ao objeto 'contact' antigo para que o Django saiba que deve ATUALIZAR e não criar um novo.
-        form = ContactForm(request.POST, instance=contact)
+        # e com os arquivos de upload, como fotos e documentos (request.FILES)
+        form = ContactForm(request.POST, request.FILES, instance=contact)
+
+        # Se a validação falhar (ex: digitou algo errado), monta o contexto com os erros para o usuário corrigir
+        context = {
+            'form': form,
+            'form_action': form_action,
+        }
 
         # Se os novos dados forem válidos
         if form.is_valid():
@@ -162,11 +172,7 @@ def update(request, contact_id):
             # exibe os dados salvos e previne reenvios acidentais de dados.
             return redirect('contact:update', contact_id=contact.pk)
 
-        # Se a validação falhar (ex: digitou algo errado), monta o contexto com os erros para o usuário corrigir
-        context = {
-            'form': form,
-            'form_action': form_action,
-        }
+        
         return render(request, 'contact/create.html', context)
 
     # Se o método for GET (usuário acabou de entrar na página para editar), 

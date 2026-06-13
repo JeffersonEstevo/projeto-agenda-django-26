@@ -8,34 +8,17 @@ from django.core.exceptions import ValidationError
 from . import models
 
 class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as funcionalidades de ModelForm do Django
-    # Cria o campo 'first_name' manualmente como um texto obrigatório
-    first_name = forms.CharField(
-        # Define o elemento HTML do campo (uma caixa de texto simples)
-        widget=forms.TextInput(
+    # Cria o campo 'picture' manualmente como um texto obrigatório
+    picture = forms.ImageField(
+        # Define o elemento HTML do campo (um botão para envio de arquivo)
+        widget=forms.FileInput(
             # Adiciona atributos direto na tag HTML do campo
             attrs={
-                # Define as classes CSS para estilizar o campo na tela
-                'class': 'classe-a classe-b',
-                # Coloca o texto de dica que some ao digitar
-                'placeholder': 'Aqui veio do init',
+                # Restringe a seleção do usuário para aceitar apenas arquivos de imagem
+                'accept': 'image/*',
             }
-        ),
-        # Altera o texto da etiqueta (label) que fica ao lado ou acima do campo
-        label='Primeiro Nome',
-        # Adiciona uma pequena frase de instrução logo abaixo do campo
-        help_text='Texto de ajuda para seu usuário',
+        )
     )
-
-    # Método construtor que roda toda vez que o formulário é criado na memória
-    def __init__(self, *args, **kwargs):
-        # Executa a inicialização padrão do Django para carregar os campos de forma correta
-        super().__init__(*args, **kwargs)
-
-        # O trecho abaixo está comentado (não roda), mas serve para alterar o campo via código:
-        # self.fields['first_name'].widget.attrs.update({
-        #     'class': 'classe-a classe-b',
-        #     'placeholder': 'Aqui veio do init',
-        # })
 
     class Meta:  # Cria a classe interna Meta para configurar as opções do formulário
         model = models.Contact  # Define que o formulário será baseado no modelo de banco de dados chamado Contact
@@ -46,22 +29,8 @@ class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as 
             'email',  # Inclui o campo do email no formulário
             'description', # Inclui o campo de descrição no formulário
             'category', # Inclui o campo de categoria no formulário
+            'picture',  # Inclui o campo de picture no formulário
         )  # Fecha a tupla de especificação dos campos
-
-        # O dicionário 'widgets' serve para customizar a renderização HTML de cada campo
-        # widgets = {
-        #     # Altera as propriedades visuais do campo 'first_name'
-        #     'first_name': forms.TextInput(
-        #         # O 'attrs' (atributos) injeta propriedades diretamente na tag HTML <input>
-        #         attrs={
-        #             # Adiciona classes CSS para estilizar o campo na página (ex: para usar Bootstrap)
-        #             'class': 'classe-a classe-b',
-                    
-        #             # Adiciona uma frase cinza de dica que some quando o usuário começa a digitar
-        #             'placeholder': 'Escreva aqui',
-        #         }
-        #     )
-        # }
 
     def clean(self):  # Define o método clean para realizar validações personalizadas no formulário
         # Armazena o dicionário de dados já limpos e validados pelo Django nesta variável local
