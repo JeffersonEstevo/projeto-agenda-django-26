@@ -1,0 +1,60 @@
+{# Herda a estrutura visual e os blocos padrão do arquivo base do projeto #}
+{% extends 'global/base.html' %}
+
+{# Define o conteúdo específico que será inserido no bloco 'content' do arquivo base #}
+{% block content %}
+  <div class="form-wrapper">
+
+    <h2>Register</h2>
+    
+    {# Formulário HTML que envia os dados via POST para a URL definida na variável form_action #}
+    <form 
+      action="{{ form_action }}"
+      method="POST"
+    >
+      {# Token de segurança obrigatório do Django para proteger contra ataques CSRF #}
+      {% csrf_token %}      
+      
+      <div class="form-content">
+
+        {# Faz um loop para renderizar individualmente cada campo gerado pelo formulário Django #}
+        {% for field in form %}
+          <div class="form-group">
+            {# Renderiza o rótulo (label) do campo vinculando ao ID correto #}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            
+            {# Renderiza o input HTML correspondente ao tipo do campo (text, password, etc) #}
+            {{ field }}
+            
+            {# Exibe erros específicos de validação deste campo, caso existam #}
+            {{ field.errors }}
+
+            {# Verifica se o campo possui um texto de ajuda e o exibe logo abaixo #}
+            {% if field.help_text %}
+              <p class="help-text">{{ field.help_text }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      {# Verifica e exibe erros gerais do formulário que não pertencem a um campo específico #}
+      {% if form.non_field_errors %}
+        <div class="form-content">
+          <div class="form-group">
+            <div class="message error">
+              {{ form.non_field_errors }}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {# Botão de envio para processar e salvar os dados do formulário #}
+      <div class="form-content">
+        <div class="form-group">
+          <button class="btn" type="submit">Send</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+{% endblock content %}

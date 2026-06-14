@@ -47,5 +47,8 @@ urlpatterns = [
     path('contact/<int:contact_id>/update/', views.update, name='update'),
     # 4. Rota de Deleção (Delete): Processa a exclusão permanente de um contato específico
     path('contact/<int:contact_id>/delete/', views.delete, name='delete'),
+
+    # user
+    path('user/create/', views.register, name='register'),
 ]
 

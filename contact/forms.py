@@ -7,6 +7,9 @@ from django.core.exceptions import ValidationError
 # Geralmente usado no Django ou FastAPI para acessar as tabelas do banco de dados.
 from . import models
 
+# Importa o formulário padrão de criação de usuário do sistema de autenticação do Django
+from django.contrib.auth.forms import UserCreationForm
+
 class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as funcionalidades de ModelForm do Django
     # Cria o campo 'picture' manualmente como um texto obrigatório
     picture = forms.ImageField(
@@ -72,4 +75,11 @@ class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as 
 
         # Devolve o valor do campo (tratado) para o formulário, garantindo que ele não fique vazio/None
         return first_name
+
+
+# Cria uma classe customizada para o formulário de registro, herdando os recursos do Django
+class RegisterForm(UserCreationForm):
+    # O '...' (Ellipsis) é um marcador temporário que indica que o código está incompleto,
+    # permitindo que a classe seja criada sem gerar erros de sintaxe.
+    ...
     
