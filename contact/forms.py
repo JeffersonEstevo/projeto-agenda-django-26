@@ -10,6 +10,10 @@ from . import models
 # Importa o formulário padrão de criação de usuário do sistema de autenticação do Django
 from django.contrib.auth.forms import UserCreationForm
 
+# Importa o modelo User nativo do sistema de autenticação do Django.
+# Este modelo já possui campos padrão como username, password, email, first_name e last_name.
+from django.contrib.auth.models import User
+
 class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as funcionalidades de ModelForm do Django
     # Cria o campo 'picture' manualmente como um texto obrigatório
     picture = forms.ImageField(
@@ -78,8 +82,44 @@ class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as 
 
 
 # Cria uma classe customizada para o formulário de registro, herdando os recursos do Django
+# Define um formulário de registro personalizado herdando do UserCreationForm do Django
 class RegisterForm(UserCreationForm):
-    # O '...' (Ellipsis) é um marcador temporário que indica que o código está incompleto,
-    # permitindo que a classe seja criada sem gerar erros de sintaxe.
-    ...
+    # Campo obrigatório para o primeiro nome, exigindo no mínimo 3 caracteres
+    first_name = forms.CharField(
+        required=True,
+        min_length=3,
+    )
+    # Campo obrigatório para o sobrenome, exigindo no mínimo 3 caracteres
+    last_name = forms.CharField(
+        required=True,
+        min_length=3,
+    )
+    # Campo para o endereço de e-mail (valida o formato @ automaticamente)
+    email = forms.EmailField()
+
+    # Configurações de metadados do formulário
+    class Meta:
+        # Vincula este formulário ao modelo de usuário padrão do Django
+        model = User
+        # Define a ordem e quais campos serão exibidos no formulário final
+        fields = (
+            'first_name', 'last_name', 'email',
+            'username', 'password1', 'password2',
+        )
+
+    # Método de validação customizado para o campo 'email'
+    def clean_email(self):
+        # Captura o e-mail digitado pelo usuário (já limpo pelo Django)
+        email = self.cleaned_data.get('email')
+
+        # Consulta o banco de dados para verificar se o e-mail já está cadastrado
+        if User.objects.filter(email=email).exists():
+            # Se o e-mail já existir, adiciona uma mensagem de erro específica ao campo
+            self.add_error(
+                'email',
+                ValidationError('Já existe este e-mail', code='invalid')
+            )
+
+        # Retorna o e-mail (válido ou com erro associado) para o fluxo do formulário
+        return email
     
