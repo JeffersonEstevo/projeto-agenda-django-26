@@ -1,0 +1,18 @@
+{% extends 'global/base.html' %} {# Herda toda a estrutura visual e HTML do arquivo 'base.html' #}
+{% block content %} {# Define o início do bloco de conteúdo que vai preencher a base #}
+
+  <div class="form-wrapper"> {# Abre uma divisão HTML com a classe CSS para estilizar o formulário #}
+
+    <h2>Login </h2> {# Exibe o título principal da página como "Login" #}
+    
+    {% if user.is_authenticated %} {# Verifica se o usuário atual já está logado no sistema #}
+      <p> {# Abre um parágrafo para exibir o texto de usuário autenticado #}
+        Você fez login como {{ user.username }}. {# Mostra dinamicamente o nome de usuário de quem está logado #}
+        Clique <a href="{% url 'contact:logout' %}">aqui</a> {# Cria um link que busca a URL de logout do app 'contact' #}
+        para sair. {# Texto complementar que fecha a instrução de clique #}
+      </p> {# Fecha o parágrafo de texto do usuário logado #}
+    {% else %} {# Caso o usuário NÃO esteja logado (seja um visitante anônimo) #}
+      {% include 'contact/partials/_user-form.html' %} {# Inclui e renderiza o arquivo HTML isolado do formulário de login #}
+    {% endif %} {# Encerra a estrutura condicional do if/else #}
+  </div> {# Fecha a div principal que envelopa o formulário #}
+{% endblock content %} {# Encerra o bloco de conteúdo que foi iniciado no topo #}

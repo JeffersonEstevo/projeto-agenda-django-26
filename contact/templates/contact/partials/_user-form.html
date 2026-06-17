@@ -1,0 +1,32 @@
+<form action="{{ form_action }}" method="POST"> {# Cria o formulário, define para onde enviar os dados e usa o método seguro POST #}
+  {% csrf_token %} {# Gera uma chave de segurança obrigatória no Django contra ataques maliciosos (CSRF) #}
+
+  <div class="form-content"> {# Abre uma divisão HTML para agrupar os campos do formulário #}
+    {% for field in form %} {# Inicia um laço de repetição para renderizar cada campo gerado pelo Django #}
+      <div class="form-group"> {# Abre um container para organizar o rótulo e o campo de texto #}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label> {# Exibe o rótulo (texto) que identifica o campo #}
+        {{ field }} {# Renderiza a caixinha de texto real (input) onde o usuário digita #}
+
+        {% if field.help_text %} {# Verifica se o Django possui algum texto de ajuda para este campo específico #}
+          <p class="help-text">{{ field.help_text }}</p> {# Exibe o texto de instrução (ex: "A senha deve ter 8 caracteres") #}
+        {% endif %} {# Encerra a checagem do texto de ajuda #}
+
+        {% if field.errors %} {# Verifica se o usuário preencheu algo errado neste campo após enviar #}
+          <div class="field-errors"> {# Abre um container para envelopar as mensagens de erro do campo #}
+            {{ field.errors }} {# Exibe a lista de erros gerada automaticamente pelo Django para o campo #}
+          </div> {# Fecha o container de erros do campo #}
+        {% endif %} {# Encerra a checagem de erros do campo #}
+      </div> {# Fecha o container do campo atual antes de pular para o próximo no laço #}
+    {% endfor %} {# Finaliza o laço de repetição que percorre todos os campos do formulário #}
+
+    {% if form.non_field_errors %} {# Verifica se existem erros gerais no formulário (ex: usuário e senha não combinam) #}
+      <div class="form-errors"> {# Abre um container para os erros gerais do formulário #}
+        {{ form.non_field_errors }} {# Exibe a lista de erros gerais na tela #}
+      </div> {# Fecha o container de erros gerais #}
+    {% endif %} {# Encerra a checagem de erros gerais #}
+
+    <div class="form-group"> {# Abre um container para o botão de envio #}
+      <button class="btn btn-primary" type="submit">Enviar</button> {# Cria o botão que dispara o envio das informações do login #}
+    </div> {# Fecha o container do botão #}
+  </div> {# Fecha a divisão que agrupa o conteúdo do formulário #}
+</form> {# Fecha a tag do formulário HTML #}

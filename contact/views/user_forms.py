@@ -6,7 +6,11 @@ from django.shortcuts import render, redirect
 from contact.forms import RegisterForm
 
 # Importa o framework de mensagens do Django para enviar notificações temporárias (ex: alertas de sucesso ou erro) ao usuário
-from django.contrib import messages
+# Importa os módulos de autenticação (login/logout) e o sistema de alertas/mensagens do Django
+from django.contrib import messages, auth
+
+# Importa o formulário padrão do Django para validação de usuário e senha
+from django.contrib.auth.forms import AuthenticationForm 
 
 
 # Define a função da view que vai gerenciar a página de cadastro do usuário
@@ -28,7 +32,8 @@ def register(request):
             messages.success(request, 'Usuário registrado')
 
             # Interrompe a execução atual e redireciona o navegador do usuário para a página de login do app 'contact'
-            return redirect('contact:login')
+            # Redireciona imediatamente o navegador do usuário para a página de login
+            return redirect('contact:login') 
 
     # Retorna a resposta HTTP renderizando o arquivo HTML na tela do navegador
     return render(
@@ -41,3 +46,39 @@ def register(request):
             'form': form
         }
     )
+
+# Define a função que controla a lógica da página de login, recebendo os dados da requisição HTTP
+def login_view(request): 
+    # Cria uma instância vazia do formulário de login para ser exibida quando a página carregar (GET)
+    form = AuthenticationForm(request) 
+    # Verifica se o usuário submeteu o formulário (clicou no botão para enviar os dados)
+    if request.method == 'POST': 
+        # Recria o formulário, mas agora preenchido com os dados (usuário/senha) enviados pelo POST
+        form = AuthenticationForm(request, data=request.POST) 
+        # Verifica se os campos foram preenchidos corretamente e se o usuário e senha existem/estão corretos
+        if form.is_valid(): 
+            # Recupera o objeto do usuário autenticado a partir dos dados validados do formulário
+            user = form.get_user() 
+            # Cria formalmente a sessão do usuário no navegador, conectando-o ao sistema
+            auth.login(request, user) 
+            # Salva uma mensagem temporária de sucesso para ser exibida na próxima página
+            messages.success(request, 'Logado com sucesso!') 
+            # Redireciona o usuário logado para a página inicial (index) do app contact
+            return redirect('contact:index') 
+        # Se o formulário for inválido (senha errada, etc), cria uma mensagem de erro
+        messages.error(request, 'Login inválido') 
+
+    return render( # Executado se a requisição for GET (página abrindo) ou se o POST falhar (erros no formulário)
+        request, # Passa o objeto da requisição obrigatório para a renderização
+        'contact/login.html', # Indica qual arquivo HTML (template) deve ser desenhado na tela do usuário
+        {
+            'form': form # Envia o formulário (com erros ou vazio) para dentro do HTML através do contexto
+        }
+    )
+
+# Define a função responsável por desconectar o usuário do sistema
+def logout_view(request):
+    # Encerra a sessão do usuário atual, limpando os dados de autenticação do navegador 
+    auth.logout(request) 
+    # Redireciona o usuário de volta para a página de login após ele sair do sistema
+    return redirect('contact:login') 
