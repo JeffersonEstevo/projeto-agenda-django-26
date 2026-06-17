@@ -1,8 +1,12 @@
 # Importa a função do Django usada para renderizar páginas HTML enviando dados do back-end
-from django.shortcuts import render
+# Importa a função utilitária do Django usada para redirecionar o usuário para outra URL ou página do site
+from django.shortcuts import render, redirect
 
 # Importa o formulário de registro personalizado que criamos anteriormente
 from contact.forms import RegisterForm
+
+# Importa o framework de mensagens do Django para enviar notificações temporárias (ex: alertas de sucesso ou erro) ao usuário
+from django.contrib import messages
 
 
 # Define a função da view que vai gerenciar a página de cadastro do usuário
@@ -19,6 +23,12 @@ def register(request):
         if form.is_valid():
             # Salva o novo usuário de forma segura no banco de dados se tudo estiver correto
             form.save()
+
+            # Envia um alerta de sucesso temporário (flash message) para o usuário com o texto 'Usuário registrado'
+            messages.success(request, 'Usuário registrado')
+
+            # Interrompe a execução atual e redireciona o navegador do usuário para a página de login do app 'contact'
+            return redirect('contact:login')
 
     # Retorna a resposta HTTP renderizando o arquivo HTML na tela do navegador
     return render(
