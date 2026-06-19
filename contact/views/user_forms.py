@@ -2,8 +2,10 @@
 # Importa a função utilitária do Django usada para redirecionar o usuário para outra URL ou página do site
 from django.shortcuts import render, redirect
 
-# Importa o formulário de registro personalizado que criamos anteriormente
-from contact.forms import RegisterForm
+# Importa o formulário de registro personalizado que criamos anteriormente.
+# Importa a classe do formulário 'RegisterUpdateForm' que está localizada dentro 
+# do arquivo 'forms.py', o qual pertence ao app (aplicativo) chamado 'contact'.
+from contact.forms import RegisterForm, RegisterUpdateForm
 
 # Importa o framework de mensagens do Django para enviar notificações temporárias (ex: alertas de sucesso ou erro) ao usuário
 # Importa os módulos de autenticação (login/logout) e o sistema de alertas/mensagens do Django
@@ -46,6 +48,43 @@ def register(request):
             'form': form
         }
     )
+
+def user_update(request):
+# Define uma função de View chamada 'user_update' que recebe o objeto 'request' da requisição HTTP.
+
+    form = RegisterUpdateForm(instance=request.user)
+    # Cria uma instância do formulário pré-preenchida com os dados atuais do usuário logado (GET padrão).
+
+    if request.method != 'POST':
+    # Verifica se o método de envio da requisição NÃO é do tipo POST (ou seja, se o usuário está apenas acessando a página).
+        return render(
+            request,
+            'contact/user_update.html',
+            {
+                'form': form
+            }
+        )
+        # Renderiza a página HTML do formulário vazio/preenchido e encerra a execução deste bloco se não for POST.
+
+    form = RegisterUpdateForm(data=request.POST, instance=request.user)
+    # Recria o formulário, mas agora injetando os dados que o usuário preencheu no HTML (request.POST) e mantendo a referência do usuário atual.
+
+    if not form.is_valid():
+    # Executa todos os métodos de validação (clean, clean_email, etc.) e verifica se o formulário contém algum erro.
+        return render(
+            request,
+            'contact/user_update.html',
+            {
+                'form': form
+            }
+        )
+        # Se houver erros, recarrega a mesma página HTML exibindo os alertas de validação para o usuário.
+
+    form.save()
+    # Executa o método save() customizado do formulário, criptografando a senha (se alterada) e salvando as modificações no banco de dados.
+    
+    return redirect('contact:user_update')
+    # Redireciona o navegador de volta para a mesma página de atualização (evitando o reenvio de dados caso o usuário atualize a página).
 
 # Define a função que controla a lógica da página de login, recebendo os dados da requisição HTTP
 def login_view(request): 

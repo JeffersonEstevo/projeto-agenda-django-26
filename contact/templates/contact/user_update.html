@@ -1,0 +1,20 @@
+{% extends 'global/base.html' %}
+{# Herda toda a estrutura visual e marcação HTML do arquivo 'global/base.html', funcionando como uma casca para esta página. #}
+
+{% block content %}
+{# Define o início do bloco chamado 'content', que vai preencher o espaço reservado de mesmo nome no arquivo base. #}
+
+  <div class="form-wrapper">
+  <!-- Cria uma caixa divisória HTML com a classe CSS 'form-wrapper' para estilizar o formulário. -->
+
+    <h2>Update User</h2>
+    <!-- Exibe o título principal da página na tela: "Update User". -->
+    
+    {% include 'contact/partials/_user-form.html' %}
+    {# Inclui e renderiza de forma modular o código HTML de outro arquivo isolado (o formulário em si). #}
+
+  </div>
+  <!-- Fecha a tag da caixa divisória HTML. -->
+
+{% endblock content %}
+{# Define o fim do bloco 'content', sinalizando ao Django que o conteúdo específico desta página termina aqui. #}
