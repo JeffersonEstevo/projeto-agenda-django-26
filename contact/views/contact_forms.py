@@ -31,7 +31,16 @@ def create(request):
         # Se todos os campos forem preenchidos corretamente de acordo com as regras do formulário
         if form.is_valid():
             # Salva o novo contato no banco de dados
-            contact = form.save()
+            # contact = form.save()
+            
+            # Cria uma instância do contato na memória com os dados do formulário, mas não salva no banco de dados ainda (commit=False)
+            contact = form.save(commit=False)
+
+            # Vincula o contato criado ao usuário que está logado atualmente no sistema (define o dono do contato)
+            contact.owner = request.user
+
+            # Salva definitivamente o contato no banco de dados com todas as informações atualizadas
+            contact.save()
             # REDIRECIONAMENTO CRÍTICO: Envia o usuário para a página de edição do contato criado.
             # Isso limpa a requisição POST do navegador, impedindo que o usuário crie o contato 
             # duplicado caso aperte F5 ou recarregue a página.
@@ -52,8 +61,20 @@ def create(request):
 def update(request, contact_id):
     """View responsável por buscar um contato existente, exibir seus dados e salvar alterações."""
     # Busca o contato pelo ID (pk). Se não existir ou se show=False, joga o usuário direto para a tela 404
-    contact = get_object_or_404(Contact, pk=contact_id, show=True)
+    # contact = get_object_or_404(Contact, pk=contact_id, show=True)
     
+    # Busca um contato específico ou retorna erro 404 (Página Não Encontrada) se não existir
+    contact = get_object_or_404(  
+        # Modelo do banco de dados onde a busca será realizada
+        Contact, 
+        # Filtra pelo ID único recebido na URL (Primary Key)
+        pk=contact_id, 
+        # Garante que o contato está configurado para ser exibido/ativo no sistema
+        show=True, 
+        # Regra de segurança: garante que o contato pertence ao usuário atualmente logado
+        owner=request.user
+    )
+
     # Define dinamicamente a URL de edição passando o ID do contato atual como argumento (ex: '/contact/update/5/')
     form_action = reverse('contact:update', args=(contact_id,))
 
@@ -96,10 +117,22 @@ def update(request, contact_id):
 def delete(request, contact_id):
     # Busca o contato pelo ID (pk) se ele estiver marcado como visível (show=True).
     # Retorna um erro 404 (Página não encontrada) caso o contato não exista ou esteja oculto.
-    contact = get_object_or_404(
-        Contact, pk=contact_id, show=True
-    )
+    # contact = get_object_or_404(
+    #     Contact, pk=contact_id, show=True
+    # )
     
+    # Busca um contato específico ou retorna erro 404 (Página Não Encontrada) se não existir
+    contact = get_object_or_404(  
+        # Modelo do banco de dados onde a busca será realizada
+        Contact, 
+        # Filtra pelo ID único recebido na URL (Primary Key)
+        pk=contact_id, 
+        # Garante que o contato está configurado para ser exibido/ativo no sistema
+        show=True, 
+        # Regra de segurança: garante que o contato pertence ao usuário atualmente logado
+        owner=request.user
+    )
+
     # Captura o valor do campo oculto 'confirmation' enviado via POST pelo formulário.
     # Se o campo não for enviado (ex: primeiro clique ou acesso via GET), define 'no' como padrão.
     confirmation = request.POST.get('confirmation', 'no')
