@@ -6,8 +6,11 @@ from django.urls import reverse
 from contact.models import Contact
 # Importa a classe ContactForm do arquivo 'forms.py' localizado na pasta 'contact'
 from contact.forms import ContactForm
+# Importa o decorador que exige que o usuário esteja autenticado para acessar a view
+from django.contrib.auth.decorators import login_required
 
-
+# Exige login. Se não estiver logado, redireciona para a rota 'login' do app 'contact'
+@login_required(login_url='contact:login')
 def create(request):
     """View responsável por exibir e processar a criação de um novo contato."""
     # Define dinamicamente a URL de destino para onde o formulário enviará os dados (ele mesmo)
@@ -44,7 +47,8 @@ def create(request):
     }
     return render(request, 'contact/create.html', context)
 
-
+# Exige login. Se não estiver logado, redireciona para a rota 'login' do app 'contact'
+@login_required(login_url='contact:login')
 def update(request, contact_id):
     """View responsável por buscar um contato existente, exibir seus dados e salvar alterações."""
     # Busca o contato pelo ID (pk). Se não existir ou se show=False, joga o usuário direto para a tela 404
@@ -85,7 +89,10 @@ def update(request, contact_id):
     }
     return render(request, 'contact/create.html', context)
 
+
 # Controller/View responsável por gerenciar a exclusão segura de um contato
+# Exige login. Se não estiver logado, redireciona para a rota 'login' do app 'contact'
+@login_required(login_url='contact:login')
 def delete(request, contact_id):
     # Busca o contato pelo ID (pk) se ele estiver marcado como visível (show=True).
     # Retorna um erro 404 (Página não encontrada) caso o contato não exista ou esteja oculto.

@@ -14,6 +14,8 @@ from django.contrib import messages, auth
 # Importa o formulário padrão do Django para validação de usuário e senha
 from django.contrib.auth.forms import AuthenticationForm 
 
+# Importa o decorador que exige que o usuário esteja autenticado para acessar a view
+from django.contrib.auth.decorators import login_required
 
 # Define a função da view que vai gerenciar a página de cadastro do usuário
 def register(request):
@@ -49,6 +51,8 @@ def register(request):
         }
     )
 
+# Exige login. Se não estiver logado, redireciona para a rota 'login' do app 'contact'
+@login_required(login_url='contact:login')
 def user_update(request):
 # Define uma função de View chamada 'user_update' que recebe o objeto 'request' da requisição HTTP.
 
@@ -116,6 +120,8 @@ def login_view(request):
     )
 
 # Define a função responsável por desconectar o usuário do sistema
+# Exige login. Se não estiver logado, redireciona para a rota 'login' do app 'contact'
+@login_required(login_url='contact:login')
 def logout_view(request):
     # Encerra a sessão do usuário atual, limpando os dados de autenticação do navegador 
     auth.logout(request) 
