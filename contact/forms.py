@@ -29,7 +29,10 @@ class ContactForm(forms.ModelForm):  # Declara a classe ContactForm herdando as 
                 # Restringe a seleção do usuário para aceitar apenas arquivos de imagem
                 'accept': 'image/*',
             }
-        )
+        ),
+        # Define que o campo de imagem NÃO é obrigatório, 
+        # permitindo que o formulário seja enviado e validado mesmo se ficar vazio
+        required=False
     )
 
     class Meta:  # Cria a classe interna Meta para configurar as opções do formulário

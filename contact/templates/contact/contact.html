@@ -44,34 +44,34 @@
         </p>
     {% endif %}
 
-    {# Contêiner principal que agrupa as ações de gerenciamento do contato (Editar e Deletar) #}
-    <div class="contact-links">
-      
-      {# Link direcionado para a tela de edição, passando o ID do contato atual na URL #}
-      <a class="btn btn-link" href="{% url 'contact:update' contact.id %}">Update</a>
+    {# Verifica se o usuário logado é o dono do contato para permitir a exibição das ações #}
+    {% if user == contact.owner %}
 
-      {# Formulário seguro para exclusão do contato usando o método POST #}
-      <form action="{% url 'contact:delete' contact.id %}" method="POST">
-        
-        {# Token de segurança obrigatório do Django para prevenir ataques CSRF #}
-        {% csrf_token %}
-
-        {% comment %}
-          MECANISMO DE CONFIRMAÇÃO DE EXCLUSÃO:
-          Se o contexto indicar que ainda não houve confirmação ('no'),
-          exibe um botão de "Confirma?" e envia um campo oculto com valor "yes".
-          Caso contrário, exibe o botão padrão "Delete".
-        {% endcomment %}
-        {% if confirmation == 'no' %}
-          {# Campo oculto que avisa o backend que a exclusão foi confirmada pelo usuário #}
-          <input type="hidden" name="confirmation" value="yes">
-          <button class="btn btn-link btn-delete" type="submit">Confirma?</button>
-        {% else %}
-          {# Botão inicial que o usuário clica para iniciar o fluxo de deleção #}
-          <button class="btn btn-link btn-delete" type="submit">Delete</button>
-        {% endif %}
-        
-      </form>
-    </div>
+      {# Cria um bloco visual para agrupar os botões/links de ação do contato #}
+      <div class="contact-links">
+        {# Link que redireciona para a página de edição, passando o ID do contato na URL #}
+        <a class="btn btn-link" href="{% url 'contact:update' contact.id %}">Update</a>
+        {# Formulário seguro que envia uma requisição POST para a rota de exclusão do contato #}
+        <form action="{% url 'contact:delete' contact.id %}" method="POST">
+          {# Token obrigatório do Django para proteger o formulário contra ataques de falsificação (CSRF) #}
+          {% csrf_token %}
+          {# Verifica se a variável do sistema indica que a confirmação ainda NÃO foi feita #}
+          {% if confirmation == 'no' %}
+            {# Campo invisível que envia o valor 'yes' para confirmar a intenção de deletar no próximo clique #}
+            <input type="hidden" name="confirmation" value="yes">
+            {# Botão que pergunta ao usuário se ele realmente tem certeza da exclusão #}
+            <button class="btn btn-link btn-delete" type="submit">Confirma?</button>
+          {# Caso a confirmação já tenha sido processada ou não seja necessária #}
+          {% else %}
+            {# Botão padrão que inicia o fluxo de exclusão do contato #}
+            <button class="btn btn-link btn-delete" type="submit">Delete</button>
+          {# Encerra o bloco condicional da verificação de confirmação #}
+          {% endif %}
+        {# Encerra a tag do formulário de exclusão #}
+        </form>
+      {# Encerra a div que agrupa os botões #}
+      </div>
+    {# Encerra a verificação de segurança do dono do contato #}
+    {% endif %}
   </div>
 {% endblock content %}

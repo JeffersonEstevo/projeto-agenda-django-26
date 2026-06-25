@@ -164,3 +164,4 @@ cython_debug/
 notes.txt
 static/
 media/
+project/local_settings.py
