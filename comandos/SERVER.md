@@ -318,3 +318,30 @@ Valide e reinicie uma última vez:
 sudo nginx -t
 sudo systemctl restart nginx
 ```
+
+## Criação dos contatos com faker para testar aplicação no servidor
+
+```bash
+cd ~/agendaapp
+python utils/create_contacts.py
+```
+
+```bash
+sudo systemctl restart nginx
+```
+
+## Permitir arquivos maiores no nginx
+
+```bash
+sudo nano /etc/nginx/nginx.conf
+```
+
+Adicione em http {}:
+
+```bash
+client_max_body_size 30M;
+```
+
+```bash
+sudo systemctl restart nginx
+```
