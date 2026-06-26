@@ -262,12 +262,12 @@ server {
     listen 80;
     server_name 192.168.1.70;
 
-    location /static/ {
+    location /static {
         autoindex on;
         alias /home/ubuntu/agendaapp/static/;
     }
 
-    location /media/ {
+    location /media {
         autoindex on;
         alias /home/ubuntu/agendaapp/media/;
     }
